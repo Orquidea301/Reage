@@ -33,7 +33,11 @@ O projeto está organizado de forma modular, separando constantes, modelos, ecr�
 * **`custom_button.dart`**: Botão personalizado com tamanho e fonte adaptados para alta acessibilidade.
 * **`custom_input.dart`**: Campo de texto estilizado para recolha de dados sem fricção.
 * **`header_nav.dart`**: Cabeçalhos e barras de navegação padronizadas.
-
+* 
+### Versão do Flutter:
+Flutter 3.47.5 
+Dart 3.13.4 
+DevTools 2.60.0
 ---
 
 ## 🚀 Como Executar o Projeto
