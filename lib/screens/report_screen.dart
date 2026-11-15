@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
 
+import 'history_screen.dart'; // Importa o ecrã de histórico de 28 dias
+
 /// [ReportScreen] exibe o relatório detalhado de saúde do utilizador no ReAge.
 /// Inclui o cálculo dinâmico do IMC, resumo de treinos, frequência semanal
-/// e histórico de atividades recentes.
+/// interativa e histórico de atividades recentes, totalmente responsivo e sem overflow.
 class ReportScreen extends StatefulWidget {
   final String userWeight;
   final String userHeight;
@@ -67,12 +69,17 @@ class _ReportScreenState extends State<ReportScreen> {
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
                   color: AppColors.textDark,
+                  fontFamily: 'Times New Roman',
                 ),
               ),
               const SizedBox(height: 6),
               const Text(
                 'Acompanhe sua evolução e constância diária',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontFamily: 'Times New Roman',
+                ),
               ),
               const SizedBox(height: 24),
 
@@ -106,7 +113,7 @@ class _ReportScreenState extends State<ReportScreen> {
               ),
               const SizedBox(height: 24),
 
-              // 2. Frequência Semanal (Indicador visual de dias ativos)
+              // 2. Frequência Semanal (Totalmente Interativa e Funcional)
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -125,36 +132,78 @@ class _ReportScreenState extends State<ReportScreen> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           'Frequência da Semana',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: AppColors.textDark,
+                            fontFamily: 'Times New Roman',
                           ),
                         ),
-                        Text(
-                          'Histórico >',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: AppColors.primaryYellow,
-                            fontWeight: FontWeight.bold,
+                        // Botão Histórico interativo que abre o plano pessoal de 28 dias
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HistoryScreen(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Histórico >',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.primaryYellow,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Times New Roman',
+                            ),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
+                    // Dias da semana interativos (ao tocar, alterna o estado do dia)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: const [
-                        _DayIndicator(day: 'Dom', date: '8', active: false),
-                        _DayIndicator(day: 'Seg', date: '9', active: false),
-                        _DayIndicator(day: 'Ter', date: '10', active: true),
-                        _DayIndicator(day: 'Quar', date: '11', active: false),
-                        _DayIndicator(day: 'Quin', date: '12', active: true),
-                        _DayIndicator(day: 'Sex', date: '13', active: false),
-                        _DayIndicator(day: 'Sáb', date: '14', active: false),
+                        _InteractiveDayIndicator(
+                          day: 'Dom',
+                          date: '8',
+                          initialActive: false,
+                        ),
+                        _InteractiveDayIndicator(
+                          day: 'Seg',
+                          date: '9',
+                          initialActive: false,
+                        ),
+                        _InteractiveDayIndicator(
+                          day: 'Ter',
+                          date: '10',
+                          initialActive: true,
+                        ),
+                        _InteractiveDayIndicator(
+                          day: 'Quar',
+                          date: '11',
+                          initialActive: false,
+                        ),
+                        _InteractiveDayIndicator(
+                          day: 'Quin',
+                          date: '12',
+                          initialActive: true,
+                        ),
+                        _InteractiveDayIndicator(
+                          day: 'Sex',
+                          date: '13',
+                          initialActive: false,
+                        ),
+                        _InteractiveDayIndicator(
+                          day: 'Sáb',
+                          date: '14',
+                          initialActive: false,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 16),
@@ -172,6 +221,7 @@ class _ReportScreenState extends State<ReportScreen> {
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
                             color: AppColors.textDark,
+                            fontFamily: 'Times New Roman',
                           ),
                         ),
                       ],
@@ -204,6 +254,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: AppColors.textDark,
+                        fontFamily: 'Times New Roman',
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -229,6 +280,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey,
+                                fontFamily: 'Times New Roman',
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -238,6 +290,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primaryYellow,
+                                fontFamily: 'Times New Roman',
                               ),
                             ),
                           ],
@@ -257,6 +310,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: AppColors.textDark,
+                              fontFamily: 'Times New Roman',
                             ),
                           ),
                         ),
@@ -274,20 +328,22 @@ class _ReportScreenState extends State<ReportScreen> {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: AppColors.textDark,
+                  fontFamily: 'Times New Roman',
                 ),
               ),
               const SizedBox(height: 12),
               _buildActivityCard(
                 'Mobilidade e Articulações',
                 'Hoje • 12 min',
-                'Concluído com sucesso',
+                'Concluído',
               ),
               const SizedBox(height: 12),
               _buildActivityCard(
                 'Equilíbrio e Postura',
                 'Ontem • 15 min',
-                'Excelente disposição',
+                'Excelente',
               ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -307,9 +363,17 @@ class _ReportScreenState extends State<ReportScreen> {
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: AppColors.textDark,
+            fontFamily: 'Times New Roman',
           ),
         ),
-        Text(label, style: TextStyle(fontSize: 13, color: Colors.grey[600])),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.grey[600],
+            fontFamily: 'Times New Roman',
+          ),
+        ),
       ],
     );
   }
@@ -318,7 +382,14 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget _buildMetricColumn(String label, String value) {
     return Column(
       children: [
-        Text(label, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            color: Colors.grey,
+            fontFamily: 'Times New Roman',
+          ),
+        ),
         const SizedBox(height: 6),
         Text(
           value,
@@ -326,6 +397,7 @@ class _ReportScreenState extends State<ReportScreen> {
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: AppColors.textDark,
+            fontFamily: 'Times New Roman',
           ),
         ),
       ],
@@ -355,24 +427,32 @@ class _ReportScreenState extends State<ReportScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textDark,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textDark,
+                    fontFamily: 'Times New Roman',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: const TextStyle(fontSize: 13, color: Colors.grey),
-              ),
-            ],
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey,
+                    fontFamily: 'Times New Roman',
+                  ),
+                ),
+              ],
+            ),
           ),
+          const SizedBox(width: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
@@ -385,6 +465,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
                 color: Colors.green,
+                fontFamily: 'Times New Roman',
               ),
             ),
           ),
@@ -394,50 +475,73 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 }
 
-/// Widget auxiliar para indicar os dias da semana e estado de conclusão na frequência
-class _DayIndicator extends StatelessWidget {
+/// Widget auxiliar interativo para os dias da semana
+class _InteractiveDayIndicator extends StatefulWidget {
   final String day;
   final String date;
-  final bool active;
+  final bool initialActive;
 
-  const _DayIndicator({
+  const _InteractiveDayIndicator({
     required this.day,
     required this.date,
-    required this.active,
+    required this.initialActive,
   });
 
   @override
+  State<_InteractiveDayIndicator> createState() =>
+      _InteractiveDayIndicatorState();
+}
+
+class _InteractiveDayIndicatorState extends State<_InteractiveDayIndicator> {
+  late bool isActive;
+
+  @override
+  void initState() {
+    super.initState();
+    isActive = widget.initialActive;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          day,
-          style: TextStyle(
-            fontSize: 12,
-            color: active ? AppColors.textDark : Colors.grey,
-            fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          isActive = !isActive;
+        });
+      },
+      child: Column(
+        children: [
+          Text(
+            widget.day,
+            style: TextStyle(
+              fontSize: 12,
+              color: isActive ? AppColors.textDark : Colors.grey,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Times New Roman',
+            ),
           ),
-        ),
-        const SizedBox(height: 6),
-        Container(
-          width: 34,
-          height: 34,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: active ? AppColors.primaryYellow : Colors.grey.shade200,
-          ),
-          child: Center(
-            child: Text(
-              date,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                color: active ? Colors.white : Colors.grey.shade700,
+          const SizedBox(height: 6),
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isActive ? AppColors.primaryYellow : Colors.grey.shade200,
+            ),
+            child: Center(
+              child: Text(
+                widget.date,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: isActive ? Colors.white : Colors.grey.shade700,
+                  fontFamily: 'Times New Roman',
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

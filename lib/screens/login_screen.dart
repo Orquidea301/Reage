@@ -4,152 +4,200 @@ import 'package:idosos/screens/profile_screen.dart';
 
 import 'register_screen.dart';
 
-/// [LoginScreen] é o ecrã de autenticação e entrada no aplicativo ReAge.
-/// Oferece campos de e-mail e palavra-passe com alto contraste e navegação para o registo.
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
-      body: Stack(
-        children: [
-          Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24.0),
-              // Cartão centralizado com cantos arredondados e sombra suave
-              child: Container(
-                padding: const EdgeInsets.all(32.0),
-                decoration: BoxDecoration(
-                  color: AppColors.white.withOpacity(0.9),
-                  borderRadius: BorderRadius.circular(24.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 1. Logotipo e nome ReAge centralizados no topo (como na 1ª imagem)
+              Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      'assets/images/logo_reage.png',
+                      width: 120,
+                      height: 120,
+                    ),
+                    const SizedBox(width: 24),
+                    const Text(
+                      'ReAge',
+                      style: TextStyle(
+                        fontSize: 52,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textDark,
+                        fontFamily: 'Times New Roman',
+                      ),
                     ),
                   ],
                 ),
-                child: Column(
+              ),
+              const SizedBox(height: 40),
+
+              // 2. Título de Boas-vindas
+              const Text(
+                'Bem-vindo de volta!',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark,
+                  fontFamily: 'Times New Roman',
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Entre para continuar sua jornada de movimento.',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey,
+                  fontFamily: 'Times New Roman',
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // 3. Campo de E-mail
+              const Text(
+                'E-mail',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark,
+                  fontFamily: 'Times New Roman',
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontFamily: 'Times New Roman',
+                ),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: Color(0xFFFFB703),
+                      width: 1.5,
+                    ), // Amarelo vivo
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: Color(0xFFFFB703),
+                      width: 1.5,
+                    ), // Amarelo vivo
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // 4. Campo de Senha
+              const Text(
+                'Senha',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark,
+                  fontFamily: 'Times New Roman',
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontFamily: 'Times New Roman',
+                ),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: Color(0xFFFFB703),
+                      width: 1.5,
+                    ), // Amarelo vivo
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: Color(0xFFFFB703),
+                      width: 1.5,
+                    ), // Amarelo vivo
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // 5. Botão "Entrar" com o amarelo vivo correto e texto em NEGRITO
+              SizedBox(
+                width: double.infinity,
+                height: 55,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(
+                      0xFFFFB703,
+                    ), // Amarelo vibrante pedido
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
+                  ),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProfileScreen()),
+                    );
+                  },
+                  child: const Text(
+                    'Entrar',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold, // Negrito bem destacado
+                      color: Colors
+                          .black, // Texto em preto para contraste perfeito
+                      fontFamily: 'Times New Roman',
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // 6. Rodapé para o Cadastro
+              Center(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Título principal do ecrã
                     const Text(
-                      'Login',
+                      'Não tem uma conta? ',
                       style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryYellow,
+                        color: Colors.grey,
+                        fontSize: 15,
+                        fontFamily: 'Times New Roman',
                       ),
                     ),
-                    const SizedBox(height: 32),
-
-                    // Campo de entrada para o e-mail
-                    TextField(
-                      keyboardType: TextInputType.emailAddress,
-                      style: const TextStyle(fontSize: 18),
-                      decoration: InputDecoration(
-                        labelText: 'E-mail*',
-                        labelStyle: const TextStyle(color: Colors.grey),
-                        filled: true,
-                        fillColor: AppColors.backgroundCream,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: AppColors.primaryYellow,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: AppColors.primaryYellow,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Campo de entrada para a senha (oculto)
-                    TextField(
-                      obscureText: true,
-                      style: const TextStyle(fontSize: 18),
-                      decoration: InputDecoration(
-                        labelText: 'Senha*',
-                        labelStyle: const TextStyle(color: Colors.grey),
-                        filled: true,
-                        fillColor: AppColors.backgroundCream,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: AppColors.primaryYellow,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: AppColors.primaryYellow,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-
-                    // Opção de recuperação de palavra-passe
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {
-                          // Implementar recuperação de senha futuramente
-                        },
-                        child: const Text(
-                          'Esqueceu a senha?',
-                          style: TextStyle(
-                            color: AppColors.primaryYellow,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Botão principal de entrada
-                    SizedBox(
-                      width: double.infinity,
-                      height: 55,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryYellow,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: () {
-                          // Navega para o perfil/dashboard principal
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProfileScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'Entrar',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Botão para redirecionar novos utilizadores para o cadastro
-                    TextButton(
-                      onPressed: () {
+                    GestureDetector(
+                      onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -158,21 +206,21 @@ class LoginScreen extends StatelessWidget {
                         );
                       },
                       child: const Text(
-                        'Não tem uma conta? Cadastre-se',
-                        textAlign: TextAlign.center,
+                        'Cadastre-se',
                         style: TextStyle(
-                          color: AppColors.primaryYellow,
-                          fontSize: 16,
+                          color: Color(0xFFFFB703),
                           fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          fontFamily: 'Times New Roman',
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

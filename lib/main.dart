@@ -10,7 +10,7 @@ void main() {
 
 /// [ReAgeApp] é o widget raiz da aplicação.
 /// Define as configurações globais de tema, cores padronizadas,
-/// tipografia e o ecrã inicial (`LoginScreen`).
+/// tipografia clássica (Times New Roman) e o ecrã inicial (`LoginScreen`).
 class ReAgeApp extends StatelessWidget {
   const ReAgeApp({super.key});
 
@@ -21,11 +21,11 @@ class ReAgeApp extends StatelessWidget {
       // Remove a faixa vermelha de "Debug" no canto superior direito
       debugShowCheckedModeBanner: false,
 
-      // Configuração do tema global com as cores e padrões do ReAge
+      // Configuração do tema global com as novas cores e fontes do ReAge
       theme: ThemeData(
         primaryColor: AppColors.primaryYellow,
         scaffoldBackgroundColor: AppColors.backgroundCream,
-        fontFamily: 'Roboto',
+        fontFamily: 'Times New Roman', // Fonte alterada para Times
       ),
 
       // Define o ecrã inicial ao abrir a aplicação

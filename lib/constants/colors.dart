@@ -1,10 +1,14 @@
-// Cores principais (Amarelo #FFB834, Fundo #FDFBF7, etc.)
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primaryYellow = Color(0xFFFFAE24); // Amarelo dos botões
-  static const Color backgroundCream = Color(0xFFFDFBF7); // Fundo bege claro
-  static const Color textDark = Color(0xFF2C2C2C); // Cor de texto principal
-  static const Color white = Color(0xFFFFFFFF);
-  static const Color grayBorder = Color(0xFFD3D3D3);
+  // Cores oficiais da paleta ReAge
+  static const Color primaryYellow = Color(
+    0xFFf6ba02,
+  ); // Amarelo principal vibrante
+  static const Color secondaryGold = Color(0xFFe4ad49); // Dourado de apoio
+  static const Color accentOrange = Color(0xFFf4ae31); // Tom intermediário
+  static const Color backgroundCream = Color(0xFFf8f0de); // Fundo creme claro
+  static const Color textDark = Color(0xFF2C2C2C); // Texto escuro para leitura
+  static const Color black = Colors.black;
+  static const Color white = Colors.white;
 }
