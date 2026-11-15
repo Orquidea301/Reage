@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'constants/colors.dart';
+import 'constants/app_theme.dart';
 import 'screens/login_screen.dart'; // Importa a tela de login
 
 /// Ponto de entrada principal da aplicação ReAge.
@@ -22,11 +22,7 @@ class ReAgeApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       // Configuração do tema global com as cores e padrões do ReAge
-      theme: ThemeData(
-        primaryColor: AppColors.primaryYellow,
-        scaffoldBackgroundColor: AppColors.backgroundCream,
-        fontFamily: 'Roboto',
-      ),
+      theme: AppTheme.light,
 
       // Define o ecrã inicial ao abrir a aplicação
       home: const LoginScreen(),
