@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'constants/app_theme.dart';
-import 'screens/login_screen.dart'; // Importa a tela de login
+// import 'screens/login_screen.dart'; // Importa a tela de login
+import 'screens/preview_page.dart';
 
 /// Ponto de entrada principal da aplicação ReAge.
 void main() {
@@ -25,7 +26,8 @@ class ReAgeApp extends StatelessWidget {
       theme: AppTheme.light,
 
       // Define o ecrã inicial ao abrir a aplicação
-      home: const LoginScreen(),
+      // home: const LoginScreen(),
+      home: const PreviewPage(),
     );
   }
 }
