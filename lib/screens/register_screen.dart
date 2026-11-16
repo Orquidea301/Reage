@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
-
+import '../widgets/app_widgets.dart';
 import 'goals_screen.dart';
 
 /// [RegisterScreen] é o ecrã de registo de novos utilizadores no ReAge.
-/// Recolhe o nome, e-mail e palavra-passe, validando a correspondência
-/// das senhas antes de avançar para a primeira etapa do onboarding (Metas).
+/// Utiliza o [AuthScaffold] e realiza validações completas dos dados.
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -14,20 +12,22 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  // Controladores para capturar o texto inserido em cada campo do formulário
+  static const bool _pedirConfirmacao = true;
+  static const int _minimoSenha = 8;
+  static const List<String> _perfis = ['O próprio idoso', 'Familiar', 'Médico'];
+
+  // Controladores de texto do formulário
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
-  // Estados para alternar a visibilidade das palavras-passe
-  bool _obscurePassword = true;
-  bool _obscureConfirm = true;
+  // Estado do dropdown de perfil
+  String _selectedPerfil = _perfis.first;
 
   @override
   void dispose() {
-    // Liberta os controladores da memória quando o ecrã é destruído
+    // Libera os controladores ao destruir o widget
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -35,195 +35,123 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  // Valida os dados inseridos e avança para a próxima tela se tudo estiver correto
+  // Valida os dados inseridos e avança para a tela de metas se tudo estiver correto
   void _handleRegister() {
-    String name = _nameController.text.trim();
-    String email = _emailController.text.trim();
-    String password = _passwordController.text;
-    String confirmPassword = _confirmPasswordController.text;
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final confirm = _confirmPasswordController.text.trim();
 
-    // Validação de campos vazios
-    if (name.isEmpty ||
-        email.isEmpty ||
-        password.isEmpty ||
-        confirmPassword.isEmpty) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    // a) Validação de campos vazios
+    if (name.isEmpty || email.isEmpty || password.isEmpty || (_pedirConfirmacao && confirm.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor, preencha todos os campos.')),
       );
       return;
     }
 
-    // Validação se as senhas coincidem
-    if (password != confirmPassword) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('As senhas não coincidem!')));
+    // b) Validação do formato do e-mail
+    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+    if (!emailRegex.hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Digite um e-mail válido.')),
+      );
       return;
     }
 
-    // Avança para a primeira etapa do onboarding (Metas) levando o nome do utilizador
+    // c) Validação do tamanho mínimo da senha
+    if (password.length < _minimoSenha) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('A senha precisa ter no mínimo $_minimoSenha caracteres.')),
+      );
+      return;
+    }
+
+    // d) Validação de confirmação de senha (se aplicável)
+    if (_pedirConfirmacao && password != confirm) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('As senhas não coincidem!')),
+      );
+      return;
+    }
+
+    // Avança para GoalsScreen passando o nome do utilizador
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => GoalsScreen(userName: name)),
+      MaterialPageRoute(
+        builder: (context) => GoalsScreen(userName: name),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundCream,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textDark),
-          onPressed: () => Navigator.pop(context),
+    return AuthScaffold(
+      title: 'Comece a se cuidar',
+      subtitle: 'Crie uma conta para montar seu plano pessoal.',
+      children: [
+        LabeledField(
+          label: 'Como quer ser chamado?',
+          controller: _nameController,
+          hint: 'Seu nome',
+          keyboardType: TextInputType.name,
+          capitalization: TextCapitalization.words,
         ),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                'Criar Conta',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textDark,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Preencha os seus dados para começar',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 32),
-
-              // Campo de entrada: Nome completo
-              _buildInputField(
-                controller: _nameController,
-                label: 'Nome completo*',
-                icon: Icons.person_outline,
-              ),
-              const SizedBox(height: 16),
-
-              // Campo de entrada: E-mail
-              _buildInputField(
-                controller: _emailController,
-                label: 'E-mail*',
-                icon: Icons.email_outlined,
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16),
-
-              // Campo de entrada: Senha
-              _buildInputField(
-                controller: _passwordController,
-                label: 'Senha*',
-                icon: Icons.lock_outline,
-                isPassword: true,
-                obscureText: _obscurePassword,
-                onToggleVisibility: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Campo de entrada: Confirmar Senha
-              _buildInputField(
-                controller: _confirmPasswordController,
-                label: 'Confirmar senha*',
-                icon: Icons.lock_outline,
-                isPassword: true,
-                obscureText: _obscureConfirm,
-                onToggleVisibility: () {
-                  setState(() {
-                    _obscureConfirm = !_obscureConfirm;
-                  });
-                },
-              ),
-              const SizedBox(height: 32),
-
-              // Botão de ação principal (Cadastrar e Avançar)
-              SizedBox(
-                height: 55,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryYellow,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  onPressed: _handleRegister,
-                  child: const Text(
-                    'CONTINUAR',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+        const SizedBox(height: 16),
+        LabeledField(
+          label: 'E-mail',
+          controller: _emailController,
+          hint: 'seu.email@exemplo.com',
+          keyboardType: TextInputType.emailAddress,
+          suggestions: false,
+        ),
+        const SizedBox(height: 16),
+        LabeledField(
+          label: 'Senha (mínimo de $_minimoSenha caracteres)',
+          controller: _passwordController,
+          hint: 'Sua senha',
+          password: true,
+          textInputAction: _pedirConfirmacao ? TextInputAction.next : TextInputAction.done,
+        ),
+        if (_pedirConfirmacao) ...[
+          const SizedBox(height: 16),
+          LabeledField(
+            label: 'Confirmar senha',
+            controller: _confirmPasswordController,
+            hint: 'Confirme sua senha',
+            password: true,
+            textInputAction: TextInputAction.done,
+          ),
+        ],
+        const SizedBox(height: 16),
+        LabeledDropdown(
+          label: 'Quem está cadastrando?',
+          value: _selectedPerfil,
+          options: _perfis,
+          onChanged: (val) {
+            setState(() {
+              _selectedPerfil = val;
+            });
+          },
+        ),
+        const SizedBox(height: 24),
+        PrimaryButton(
+          label: 'Criar conta',
+          onPressed: _handleRegister,
+        ),
+        const SizedBox(height: 12),
+        Center(
+          child: AuthLink(
+            question: 'Já tem uma conta? ',
+            action: 'Entrar',
+            onTap: () {
+              Navigator.of(context).maybePop();
+            },
           ),
         ),
-      ),
-    );
-  }
-
-  // Widget auxiliar para construir campos de texto personalizados e padronizados
-  Widget _buildInputField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    TextInputType keyboardType = TextInputType.text,
-    bool isPassword = false,
-    bool obscureText = false,
-    VoidCallback? onToggleVisibility,
-  }) {
-    return TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      style: const TextStyle(fontSize: 18, color: AppColors.textDark),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(color: Colors.grey, fontSize: 16),
-        prefixIcon: Icon(icon, color: AppColors.primaryYellow),
-        suffixIcon: isPassword
-            ? IconButton(
-                icon: Icon(
-                  obscureText ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.grey,
-                ),
-                onPressed: onToggleVisibility,
-              )
-            : null,
-        filled: true,
-        fillColor: AppColors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.primaryYellow),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Colors.grey.shade300),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(
-            color: AppColors.primaryYellow,
-            width: 2,
-          ),
-        ),
-      ),
+      ],
     );
   }
 }
