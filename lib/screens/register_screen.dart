@@ -13,7 +13,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  // A versão web não tem "Confirmar senha"; trocar para true ativa o campo de confirmação
   static const bool _pedirConfirmacao = true;
   static const int _minimoSenha = 8;
   static const List<String> _perfis = ['O próprio idoso', 'Familiar', 'Médico'];
