@@ -1,5 +1,3 @@
-import 'dart:io'; // Necessário para a classe File
-
 import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
 import 'package:idosos/screens/workout_screen.dart';
@@ -8,20 +6,22 @@ import 'report_screen.dart';
 
 /// [ProfileScreen] é o ecrã principal de perfil e hub de navegação do ReAge.
 /// Gere a troca de abas (Treino, Relatório e Perfil) e exibe as informações
-/// recolhidas do utilizador (nome, foto, altura, peso e idade).
+/// recolhidas do utilizador (nome, altura, peso, idade e contacto de emergência).
 class ProfileScreen extends StatefulWidget {
   final String userName;
   final String userHeight;
   final String userWeight;
   final String userAge;
-  final File? userPhoto; // Foto de perfil vinda do onboarding
+  final String emergencyContact;
+  final dynamic userPhoto; // Mantido opcional para compatibilidade com outras telas
 
-  ProfileScreen({
+  const ProfileScreen({
     super.key,
     this.userName = 'nome',
     this.userHeight = '0000',
     this.userWeight = '0000',
     this.userAge = '0000',
+    this.emergencyContact = '',
     this.userPhoto,
   });
 
@@ -83,8 +83,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           // Cabeçalho Amarelo Superior com cantos arredondados
           Container(
-            height:
-                260, // Altura dimensionada para acomodar o logotipo e a foto
             width: double.infinity,
             decoration: const BoxDecoration(
               color: AppColors.primaryYellow,
@@ -94,46 +92,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Círculo com o ícone padrão de pessoa
+                    Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 3),
+                        color: AppColors.white,
+                      ),
+                      child: const ClipOval(
+                        child: Icon(
+                          Icons.person,
+                          size: 45,
+                          color: AppColors.primaryYellow,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
 
-                  // Círculo com a fotografia personalizada do utilizador (ou ícone padrão)
-                  Container(
-                    padding: const EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 3),
-                      color: AppColors.white,
+                    // Nome dinâmico do utilizador em destaque
+                    Text(
+                      widget.userName,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                    child: ClipOval(
-                      child: widget.userPhoto != null
-                          ? Image.file(
-                              widget.userPhoto!,
-                              width: 65,
-                              height: 65,
-                              fit: BoxFit.cover,
-                            )
-                          : const Icon(
-                              Icons.person,
-                              size: 45,
-                              color: AppColors.primaryYellow,
-                            ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Nome dinâmico do utilizador em destaque
-                  Text(
-                    widget.userName,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+                    if (widget.emergencyContact.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        'Contato de emergência: ${widget.emergencyContact}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: AppColors.textSecondary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
             ),
           ),

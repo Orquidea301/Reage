@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
+import 'package:idosos/widgets/app_widgets.dart';
 
 import 'weight_screen.dart';
 
+/// [BodyConcernScreen] corresponde à etapa 03 de avaliação física.
+/// Permite selecionar eventuais desconfortos corporais.
 class BodyConcernScreen extends StatefulWidget {
   final String userName;
 
@@ -16,28 +19,13 @@ class _BodyConcernScreenState extends State<BodyConcernScreen> {
   // Lista para guardar múltiplos desconfortos selecionados pelo idoso
   final List<String> _selectedConcerns = [];
 
-  // Lista de opções de desconfortos
-  final List<Map<String, String>> _concerns = [
-    {
-      'title': 'Nenhum desconforto',
-      'subtitle': 'Estou pronto para qualquer exercício leve',
-    },
-    {
-      'title': 'Joelhos',
-      'subtitle': 'Evitar impactos e agachamentos profundos',
-    },
-    {
-      'title': 'Parte inferior das costas',
-      'subtitle': 'Evitar rotações bruscas e cargas na coluna',
-    },
-    {
-      'title': 'Ombros',
-      'subtitle': 'Evitar exercícios com braços acima da cabeça',
-    },
-    {
-      'title': 'Tornozelos / Pulsação',
-      'subtitle': 'Foco em estabilidade e apoio',
-    },
+  // Lista de opções de desconfortos (sem subtítulos conforme a versão web)
+  final List<String> _concerns = [
+    'Nenhum desconforto',
+    'Joelhos',
+    'Parte inferior das costas',
+    'Ombros',
+    'Tornozelos / Pulsação',
   ];
 
   // Controla a seleção dos desconfortos
@@ -62,7 +50,6 @@ class _BodyConcernScreenState extends State<BodyConcernScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
-
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -80,138 +67,90 @@ class _BodyConcernScreenState extends State<BodyConcernScreen> {
         ),
         centerTitle: true,
       ),
-
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Algum desconforto ou preocupação com seu corpo?',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textDark,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Algum desconforto ou preocupação com seu corpo?',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark,
+                ),
               ),
-            ),
+              const SizedBox(height: 20),
 
-            const SizedBox(height: 8),
+              // Lista de opções de seleção múltipla
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _concerns.length,
+                  itemBuilder: (context, index) {
+                    final concern = _concerns[index];
+                    final isSelected = _selectedConcerns.contains(concern);
 
-            const Text(
-              'Isso nos ajuda a personalizar os treinos com máxima segurança.',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Lista de opções de seleção múltipla
-            Expanded(
-              child: ListView.builder(
-                itemCount: _concerns.length,
-                itemBuilder: (context, index) {
-                  final item = _concerns[index];
-
-                  final isSelected = _selectedConcerns.contains(item['title']);
-
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 14.0),
-                    child: InkWell(
-                      onTap: () => _toggleSelection(item['title']!),
-                      borderRadius: BorderRadius.circular(16),
-
-                      child: Container(
-                        padding: const EdgeInsets.all(18),
-
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(16),
-
-                          border: Border.all(
-                            color: isSelected
-                                ? AppColors.primaryYellow
-                                : Colors.transparent,
-                            width: 2,
-                          ),
-
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.03),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-
-                        child: Row(
-                          children: [
-                            Icon(
-                              isSelected
-                                  ? Icons.check_box
-                                  : Icons.check_box_outline_blank,
-
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 14.0),
+                      child: InkWell(
+                        onTap: () => _toggleSelection(concern),
+                        borderRadius: BorderRadius.circular(16),
+                        child: Container(
+                          padding: const EdgeInsets.all(18),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
                               color: isSelected
                                   ? AppColors.primaryYellow
-                                  : Colors.grey,
-
-                              size: 28,
+                                  : Colors.transparent,
+                              width: 2,
                             ),
-
-                            const SizedBox(width: 14),
-
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item['title']!,
-
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: isSelected
-                                          ? FontWeight.bold
-                                          : FontWeight.w500,
-                                      color: AppColors.textDark,
-                                    ),
-                                  ),
-
-                                  const SizedBox(height: 2),
-
-                                  Text(
-                                    item['subtitle']!,
-
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                ],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.03),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                isSelected
+                                    ? Icons.check_box
+                                    : Icons.check_box_outline_blank,
+                                color: isSelected
+                                    ? AppColors.primaryYellow
+                                    : Colors.grey,
+                                size: 28,
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Text(
+                                  concern,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.w500,
+                                    color: AppColors.textDark,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ),
-
-            // Botão concluir/próximo
-            SizedBox(
-              width: double.infinity,
-              height: 55,
-
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _selectedConcerns.isNotEmpty
-                      ? AppColors.primaryYellow
-                      : Colors.grey[400],
-
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                    );
+                  },
                 ),
+              ),
 
+              // Botão Continuar padronizado e aviso de saúde
+              PrimaryButton(
+                label: 'Continuar',
                 onPressed: _selectedConcerns.isNotEmpty
                     ? () {
                         Navigator.pushReplacement(
@@ -223,19 +162,13 @@ class _BodyConcernScreenState extends State<BodyConcernScreen> {
                         );
                       }
                     : null,
-
-                child: const Text(
-                  'GERAR MEU PLANO DE TREINO',
-
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              const NoticeBox(
+                text: 'Antes de iniciar atividades físicas, consulte um profissional de saúde.',
+              ),
+            ],
+          ),
         ),
       ),
     );

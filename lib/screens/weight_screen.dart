@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
+import 'package:idosos/widgets/app_widgets.dart';
 
-import 'profile_photo_screen.dart';
+import 'profile_screen.dart';
 
 /// [WeightScreen] corresponde à etapa 04 do onboarding (Medidas Corporais).
-/// Permite ao utilizador ajustar de forma interativa a sua idade, altura e peso
-/// utilizando sliders de tamanho ampliado adequados para acessibilidade.
+/// Permite ajustar idade, altura, peso, além de recolher nome e contacto de emergência.
 class WeightScreen extends StatefulWidget {
   final String userName; // Recebe o nome vindo das telas anteriores
 
@@ -20,6 +20,17 @@ class _WeightScreenState extends State<WeightScreen> {
   double _selectedWeight = 70.0;
   double _selectedHeight = 1.65;
   int _selectedAge = 65;
+
+  // Controladores para o nome do idoso e contacto de emergência
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emergencyController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emergencyController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,41 +109,49 @@ class _WeightScreenState extends State<WeightScreen> {
               divisions: 230,
               onChanged: (val) => setState(() => _selectedWeight = val),
             ),
+            const SizedBox(height: 20),
+
+            // Campos para nome do idoso e contacto de emergência
+            LabeledField(
+              label: 'Nome do idoso',
+              hint: 'Digite o nome',
+              capitalization: TextCapitalization.words,
+              controller: _nameController,
+            ),
+            const SizedBox(height: 16),
+            LabeledField(
+              label: 'Contato de emergência',
+              hint: 'Nome ou telefone',
+              textInputAction: TextInputAction.done,
+              controller: _emergencyController,
+            ),
             const SizedBox(height: 32),
 
-            // Botão para concluir a avaliação e avançar para a foto de perfil
-            SizedBox(
-              height: 55,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryYellow,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                onPressed: () {
-                  // Empacota todos os dados recolhidos e envia para a tela seguinte
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfilePhotoScreen(
-                        userName: widget.userName,
-                        userHeight: '${_selectedHeight.toStringAsFixed(2)} m',
-                        userWeight: '${_selectedWeight.toStringAsFixed(1)} kg',
-                        userAge: '$_selectedAge anos',
-                      ),
+            // Botão para concluir a avaliação e avançar para ProfileScreen
+            PrimaryButton(
+              label: 'CONCLUIR AVALIAÇÃO',
+              onPressed: () {
+                final enteredName = _nameController.text.trim();
+                final finalName = enteredName.isNotEmpty ? enteredName : widget.userName;
+                final emergency = _emergencyController.text.trim();
+
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileScreen(
+                      userName: finalName,
+                      userHeight: '${_selectedHeight.toStringAsFixed(2)} m',
+                      userWeight: '${_selectedWeight.toStringAsFixed(1)} kg',
+                      userAge: '$_selectedAge anos',
+                      emergencyContact: emergency,
                     ),
-                  );
-                },
-                child: const Text(
-                  'CONCLUIR AVALIAÇÃO',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
                   ),
-                ),
-              ),
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            const NoticeBox(
+              text: 'Antes de iniciar atividades físicas, consulte um profissional de saúde.',
             ),
           ],
         ),
