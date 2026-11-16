@@ -35,9 +35,13 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
     _age = state.age;
     _height = state.height;
     _weight = state.weight;
-    _nameController = TextEditingController(
-      text: state.elderName.isNotEmpty ? state.elderName : state.registerName,
-    );
+
+    // Define o valor inicial do nome conforme a regra de papel (role)
+    final initialName = state.role == 'O próprio idoso'
+        ? (state.elderName.isNotEmpty ? state.elderName : state.registerName)
+        : state.elderName;
+
+    _nameController = TextEditingController(text: initialName);
     _emergencyController = TextEditingController(text: state.contact);
   }
 
@@ -80,6 +84,15 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
         curve: Curves.easeInOut,
       );
     } else {
+      // Validação do nome do idoso se o papel não for 'O próprio idoso'
+      final enteredName = _nameController.text.trim();
+      if (AppState.instance.role != 'O próprio idoso' && enteredName.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Digite o nome do idoso.')),
+        );
+        return;
+      }
+
       // Etapa final: validação do telefone de emergência
       final emergencyText = _emergencyController.text.trim();
       final emergencyDigits = emergencyText.replaceAll(RegExp(r'\D'), '');
@@ -91,8 +104,8 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
         return;
       }
 
-      final name = _nameController.text.trim().isNotEmpty
-          ? _nameController.text.trim()
+      final name = enteredName.isNotEmpty
+          ? enteredName
           : AppState.instance.registerName;
 
       AppState.instance.finishAssessment(
