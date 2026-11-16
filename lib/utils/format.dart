@@ -1,13 +1,13 @@
-/// Funções utilitárias de formatação com vírgula como separador decimal.
+/// Funções utilitárias de formatação com ponto como separador decimal.
 
-/// Formata altura (ex: 1,72 m)
+/// Formata altura (ex: 1.72 m)
 String fmtHeight(double value) {
-  return '${value.toStringAsFixed(2).replaceAll('.', ',')} m';
+  return '${value.toStringAsFixed(2)} m';
 }
 
-/// Formata peso com 1 casa decimal (ex: 84,0 kg)
+/// Formata peso com 1 casa decimal (ex: 84.0 kg)
 String fmtWeightDecimal(double value) {
-  return '${value.toStringAsFixed(1).replaceAll('.', ',')} kg';
+  return '${value.toStringAsFixed(1)} kg';
 }
 
 /// Formata peso de forma curta se inteiro (ex: 84 kg), senão decimal
@@ -18,9 +18,9 @@ String fmtWeightShort(double value) {
   return fmtWeightDecimal(value);
 }
 
-/// Formata IMC com 1 casa decimal e vírgula
+/// Formata IMC com 1 casa decimal e ponto (ex: 28.4)
 String fmtImc(double value) {
-  return value.toStringAsFixed(1).replaceAll('.', ',');
+  return value.toStringAsFixed(1);
 }
 
 /// Formata data no formato dd/MM/aaaa

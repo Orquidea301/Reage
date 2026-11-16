@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/app_state.dart';
+import '../utils/format.dart';
 import '../widgets/app_widgets.dart';
-import 'goals_screen.dart';
+import 'assessment_screen.dart';
 import 'profile_screen.dart';
 import 'register_screen.dart';
 
@@ -34,13 +35,13 @@ class _LoginScreenState extends State<LoginScreen> {
     if (state.assessmentDone) {
       return ProfileScreen(
         userName: state.shownName,
-        userHeight: '${state.height.toStringAsFixed(2)} m',
-        userWeight: '${state.weight.toStringAsFixed(1)} kg',
+        userHeight: fmtHeight(state.height),
+        userWeight: fmtWeightDecimal(state.weight),
         userAge: '${state.age} anos',
         emergencyContact: state.contact,
       );
     } else {
-      return GoalsScreen(userName: state.registerName);
+      return const AssessmentScreen();
     }
   }
 

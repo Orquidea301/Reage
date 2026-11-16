@@ -25,6 +25,7 @@ class AppState extends ChangeNotifier {
   int age = 65;
   double height = 1.65;
   double weight = 70;
+  final Map<int, int> answers = {}; // Respostas da avaliação (pergunta -> opção)
 
   // Campos privados de autenticação (hash seguro)
   String _salt = '';
@@ -50,6 +51,14 @@ class AppState extends ChangeNotifier {
         weight = (data['weight'] as num?)?.toDouble() ?? 70;
         _salt = data['salt'] ?? '';
         _hash = data['hash'] ?? '';
+
+        if (data['answers'] != null) {
+          final Map<String, dynamic> rawAnswers = data['answers'];
+          answers.clear();
+          rawAnswers.forEach((k, v) {
+            answers[int.parse(k)] = v as int;
+          });
+        }
       }
     } catch (e) {
       debugPrint('Erro ao carregar AppState: $e');
@@ -74,6 +83,7 @@ class AppState extends ChangeNotifier {
         'weight': weight,
         'salt': _salt,
         'hash': _hash,
+        'answers': answers.map((k, v) => MapEntry(k.toString(), v)),
       };
       await prefs.setString(_storageKey, jsonEncode(data));
     } catch (e) {
@@ -85,6 +95,12 @@ class AppState extends ChangeNotifier {
   void _changed() {
     notifyListeners();
     _save();
+  }
+
+  /// Define a resposta para uma pergunta da avaliação.
+  void setAnswer(int question, int option) {
+    answers[question] = option;
+    _changed();
   }
 
   /// Realiza o registo de uma nova conta de usuário.
@@ -102,6 +118,7 @@ class AppState extends ChangeNotifier {
     height = 1.65;
     weight = 70;
     assessmentDone = false;
+    answers.clear();
 
     registerName = name;
     email = emailAddress.trim().toLowerCase();

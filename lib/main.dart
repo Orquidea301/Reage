@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'constants/app_theme.dart';
-import 'screens/goals_screen.dart';
+import 'screens/assessment_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/profile_screen.dart';
 import 'services/app_state.dart';
+import 'utils/format.dart';
 
 /// Ponto de entrada principal da aplicação ReAge.
 void main() async {
@@ -25,13 +26,13 @@ class ReAgeApp extends StatelessWidget {
       if (state.assessmentDone) {
         return ProfileScreen(
           userName: state.shownName,
-          userHeight: '${state.height.toStringAsFixed(2)} m',
-          userWeight: '${state.weight.toStringAsFixed(1)} kg',
+          userHeight: fmtHeight(state.height),
+          userWeight: fmtWeightDecimal(state.weight),
           userAge: '${state.age} anos',
           emergencyContact: state.contact,
         );
       } else {
-        return GoalsScreen(userName: state.registerName);
+        return const AssessmentScreen();
       }
     }
     return const LoginScreen();

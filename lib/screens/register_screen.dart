@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/app_state.dart';
 import '../widgets/app_widgets.dart';
-import 'goals_screen.dart';
+import 'assessment_screen.dart';
 
 /// [RegisterScreen] é o ecrã de registo de novos utilizadores no ReAge.
 /// Utiliza o [AuthScaffold] e realiza validações completas dos dados.
@@ -38,7 +38,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  // Valida os dados inseridos, regista no AppState e avança para GoalsScreen
+  // Valida os dados inseridos, regista no AppState e avança para AssessmentScreen
   Future<void> _handleRegister() async {
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
@@ -97,11 +97,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _isLoading = false;
     });
 
-    // Avança para GoalsScreen limpando a pilha com pushAndRemoveUntil
+    // Avança para AssessmentScreen limpando a pilha com pushAndRemoveUntil
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (context) => GoalsScreen(userName: name),
+        builder: (context) => const AssessmentScreen(),
       ),
       (route) => false,
     );
