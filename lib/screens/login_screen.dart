@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import '../services/app_state.dart';
 import '../widgets/app_widgets.dart';
+import 'goals_screen.dart';
+import 'profile_screen.dart';
 import 'register_screen.dart';
 
 /// [LoginScreen] é o ecrã de autenticação e entrada no aplicativo ReAge.
@@ -15,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   // Controladores de texto para e-mail e senha
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -24,8 +28,24 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  // Valida e processa a tentativa de login
-  void _handleLogin() {
+  // Retorna a tela inicial correta dependendo do estado do onboarding
+  Widget _getHomeWidget() {
+    final state = AppState.instance;
+    if (state.assessmentDone) {
+      return ProfileScreen(
+        userName: state.shownName,
+        userHeight: '${state.height.toStringAsFixed(2)} m',
+        userWeight: '${state.weight.toStringAsFixed(1)} kg',
+        userAge: '${state.age} anos',
+        emergencyContact: state.contact,
+      );
+    } else {
+      return GoalsScreen(userName: state.registerName);
+    }
+  }
+
+  // Valida e processa a tentativa de login via AppState
+  Future<void> _handleLogin() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
@@ -38,9 +58,29 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Login será conectado na próxima etapa.")),
-    );
+    setState(() {
+      _isLoading = true;
+    });
+
+    final error = await AppState.instance.login(email, password);
+
+    if (!mounted) return;
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error)),
+      );
+    } else {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => _getHomeWidget()),
+        (route) => false,
+      );
+    }
   }
 
   @override
@@ -63,12 +103,12 @@ class _LoginScreenState extends State<LoginScreen> {
           hint: 'Sua senha',
           password: true,
           textInputAction: TextInputAction.done,
-          onSubmitted: (_) => _handleLogin(),
+          onSubmitted: (_) => _isLoading ? null : _handleLogin(),
         ),
         const SizedBox(height: 24),
         PrimaryButton(
-          label: 'Entrar',
-          onPressed: _handleLogin,
+          label: _isLoading ? 'Entrando...' : 'Entrar',
+          onPressed: _isLoading ? null : _handleLogin,
         ),
         const SizedBox(height: 12),
         Center(

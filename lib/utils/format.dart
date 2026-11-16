@@ -30,3 +30,14 @@ String fmtDate(DateTime date) {
   final year = date.year.toString();
   return '$day/$month/$year';
 }
+
+/// Formata número de telefone para (79) 99999-0098 ou (79) 9999-0098
+String fmtPhone(String raw) {
+  final digits = raw.replaceAll(RegExp(r'\D'), '');
+  if (digits.length == 11) {
+    return '(${digits.substring(0, 2)}) ${digits.substring(2, 7)}-${digits.substring(7, 11)}';
+  } else if (digits.length == 10) {
+    return '(${digits.substring(0, 2)}) ${digits.substring(2, 6)}-${digits.substring(6, 10)}';
+  }
+  return raw;
+}

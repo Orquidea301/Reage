@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../constants/app_theme.dart';
 import '../constants/colors.dart';
 
@@ -207,7 +208,7 @@ class LogoMark extends StatelessWidget {
   }
 }
 
-/// Campo de texto rotulado com suporte a senha e formatação.
+/// Campo de texto rotulado com suporte a senha, formatação e formatters.
 class LabeledField extends StatefulWidget {
   final String label;
   final TextEditingController? controller;
@@ -220,6 +221,7 @@ class LabeledField extends StatefulWidget {
   final int maxLines;
   final int? minLines;
   final bool suggestions;
+  final List<TextInputFormatter>? inputFormatters;
 
   const LabeledField({
     super.key,
@@ -234,6 +236,7 @@ class LabeledField extends StatefulWidget {
     this.maxLines = 1,
     this.minLines,
     this.suggestions = true,
+    this.inputFormatters,
   });
 
   @override
@@ -285,6 +288,7 @@ class _LabeledFieldState extends State<LabeledField> {
           minLines: widget.minLines,
           autocorrect: enableSuggestions,
           enableSuggestions: enableSuggestions,
+          inputFormatters: widget.inputFormatters,
           style: AppText.input,
           decoration: AppInput.decoration(
             hint: widget.hint,

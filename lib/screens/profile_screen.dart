@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
 import 'package:idosos/screens/workout_screen.dart';
 
+import '../services/app_state.dart';
+import '../utils/format.dart';
+import 'login_screen.dart';
 import 'report_screen.dart';
 
 /// [ProfileScreen] é o ecrã principal de perfil e hub de navegação do ReAge.
@@ -81,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       // Aba de Perfil dinâmica com os dados reais do utilizador
       return Column(
         children: [
-          // Cabeçalho Amarelo Superior com cantos arredondados
+          // Cabeçalho Amarelo Superior com cantos arredondados e botão Sair temporário
           Container(
             width: double.infinity,
             decoration: const BoxDecoration(
@@ -91,53 +94,86 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 bottomRight: Radius.circular(30),
               ),
             ),
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Círculo com o ícone padrão de pessoa
-                    Container(
-                      padding: const EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 3),
-                        color: AppColors.white,
-                      ),
-                      child: const ClipOval(
-                        child: Icon(
-                          Icons.person,
-                          size: 45,
-                          color: AppColors.primaryYellow,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
+            child: Stack(
+              children: [
+                SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Círculo com o ícone padrão de pessoa
+                          Container(
+                            padding: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 3),
+                              color: AppColors.white,
+                            ),
+                            child: const ClipOval(
+                              child: Icon(
+                                Icons.person,
+                                size: 45,
+                                color: AppColors.primaryYellow,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
 
-                    // Nome dinâmico do utilizador em destaque
-                    Text(
-                      widget.userName,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                          // Nome dinâmico do utilizador em destaque
+                          Text(
+                            widget.userName,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          if (widget.emergencyContact.isNotEmpty) ...[
+                            const SizedBox(height: 6),
+                            Text(
+                              'Contato de emergência: ${fmtPhone(widget.emergencyContact)}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: AppColors.textSecondary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ],
                       ),
                     ),
-                    if (widget.emergencyContact.isNotEmpty) ...[
-                      const SizedBox(height: 6),
-                      Text(
-                        'Contato de emergência: ${widget.emergencyContact}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: AppColors.textSecondary,
-                          fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: SafeArea(
+                    child: TextButton(
+                      // TEMPORÁRIO: será substituído na etapa 6
+                      onPressed: () {
+                        AppState.instance.logout();
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (_) => const LoginScreen()),
+                          (route) => false,
+                        );
+                      },
+                      child: const Text(
+                        'Sair',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
                       ),
-                    ],
-                  ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
 

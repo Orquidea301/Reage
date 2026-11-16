@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/app_state.dart';
 import '../widgets/app_widgets.dart';
 import 'goals_screen.dart';
 
@@ -12,6 +13,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  // A versão web não tem "Confirmar senha"; trocar para true ativa o campo de confirmação
   static const bool _pedirConfirmacao = true;
   static const int _minimoSenha = 8;
   static const List<String> _perfis = ['O próprio idoso', 'Familiar', 'Médico'];
@@ -22,8 +24,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
-  // Estado do dropdown de perfil
+  // Estado do dropdown de perfil e carregamento
   String _selectedPerfil = _perfis.first;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -35,8 +38,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  // Valida os dados inseridos e avança para a tela de metas se tudo estiver correto
-  void _handleRegister() {
+  // Valida os dados inseridos, regista no AppState e avança para GoalsScreen
+  Future<void> _handleRegister() async {
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
@@ -77,12 +80,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    // Avança para GoalsScreen passando o nome do utilizador
-    Navigator.push(
+    setState(() {
+      _isLoading = true;
+    });
+
+    await AppState.instance.register(
+      name: name,
+      emailAddress: email,
+      password: password,
+      accountRole: _selectedPerfil,
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    // Avança para GoalsScreen limpando a pilha com pushAndRemoveUntil
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
         builder: (context) => GoalsScreen(userName: name),
       ),
+      (route) => false,
     );
   }
 
@@ -138,8 +159,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         const SizedBox(height: 24),
         PrimaryButton(
-          label: 'Criar conta',
-          onPressed: _handleRegister,
+          label: _isLoading ? 'Criando...' : 'Criar conta',
+          onPressed: _isLoading ? null : _handleRegister,
         ),
         const SizedBox(height: 12),
         Center(

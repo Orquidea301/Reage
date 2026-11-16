@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:idosos/constants/colors.dart';
 import 'package:idosos/widgets/app_widgets.dart';
 
+import '../services/app_state.dart';
 import 'profile_screen.dart';
 
 /// [WeightScreen] corresponde à etapa 04 do onboarding (Medidas Corporais).
@@ -111,7 +113,7 @@ class _WeightScreenState extends State<WeightScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Campos para nome do idoso e contacto de emergência
+            // Campos para nome do idoso e contacto de emergência (telefone)
             LabeledField(
               label: 'Nome do idoso',
               hint: 'Digite o nome',
@@ -121,9 +123,14 @@ class _WeightScreenState extends State<WeightScreen> {
             const SizedBox(height: 16),
             LabeledField(
               label: 'Contato de emergência',
-              hint: 'Nome ou telefone',
+              hint: 'Telefone',
+              keyboardType: TextInputType.phone,
               textInputAction: TextInputAction.done,
               controller: _emergencyController,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(11),
+              ],
             ),
             const SizedBox(height: 32),
 
@@ -131,21 +138,41 @@ class _WeightScreenState extends State<WeightScreen> {
             PrimaryButton(
               label: 'CONCLUIR AVALIAÇÃO',
               onPressed: () {
+                final emergencyText = _emergencyController.text.trim();
+                final emergencyDigits = emergencyText.replaceAll(RegExp(r'\D'), '');
+
+                // Validação do telefone de emergência (se preenchido, deve ter 10 ou 11 dígitos)
+                if (emergencyDigits.isNotEmpty && emergencyDigits.length != 10 && emergencyDigits.length != 11) {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Digite um telefone válido, com DDD.')),
+                  );
+                  return;
+                }
+
                 final enteredName = _nameController.text.trim();
                 final finalName = enteredName.isNotEmpty ? enteredName : widget.userName;
-                final emergency = _emergencyController.text.trim();
 
-                Navigator.pushReplacement(
+                AppState.instance.finishAssessment(
+                  name: finalName,
+                  emergencyContact: emergencyDigits,
+                  ageValue: _selectedAge,
+                  heightValue: _selectedHeight,
+                  weightValue: _selectedWeight,
+                );
+
+                Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProfileScreen(
-                      userName: finalName,
+                      userName: AppState.instance.shownName,
                       userHeight: '${_selectedHeight.toStringAsFixed(2)} m',
                       userWeight: '${_selectedWeight.toStringAsFixed(1)} kg',
                       userAge: '$_selectedAge anos',
-                      emergencyContact: emergency,
+                      emergencyContact: AppState.instance.contact,
                     ),
                   ),
+                  (route) => false,
                 );
               },
             ),
