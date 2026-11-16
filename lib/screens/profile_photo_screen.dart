@@ -6,10 +6,13 @@ import 'package:image_picker/image_picker.dart';
 
 import 'profile_screen.dart';
 
-/// [ProfilePhotoScreen] permite ao utilizador carregar uma fotografia de perfil
-/// através da galeria do telemóvel ou prosseguir sem foto.
+// Permite carregar uma fotografia de perfil
+// ou prosseguir sem foto.
 class ProfilePhotoScreen extends StatefulWidget {
   final String userName;
+  final String selectedGoal;
+  final String activityLevel;
+  final List<String> bodyConcerns;
   final String userHeight;
   final String userWeight;
   final String userAge;
@@ -17,6 +20,9 @@ class ProfilePhotoScreen extends StatefulWidget {
   const ProfilePhotoScreen({
     super.key,
     required this.userName,
+    required this.selectedGoal,
+    required this.activityLevel,
+    required this.bodyConcerns,
     required this.userHeight,
     required this.userWeight,
     required this.userAge,
@@ -29,36 +35,38 @@ class ProfilePhotoScreen extends StatefulWidget {
 class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
   File? _selectedImage;
   bool _isLoading = false;
+
   final ImagePicker _picker = ImagePicker();
 
-  // Abre a galeria do dispositivo para selecionar a imagem de perfil
+  // Abre a galeria do dispositivo para selecionar a imagem
   Future<void> _pickImage() async {
     try {
       final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
+
+      if (image != null && mounted) {
         setState(() {
           _selectedImage = File(image.path);
         });
       }
     } catch (e) {
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Não foi possível carregar a imagem.')),
       );
     }
   }
 
-  // Simula um tempo de carregamento amigável e transita para o Lobby/Perfil principal
-  void _saveAndProceed() async {
+  // Salva e prossegue para o perfil principal
+  Future<void> _saveAndProceed() async {
     setState(() {
       _isLoading = true;
     });
 
-    // Simula tempo de configuração (2 segundos)
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
-    // Navega para o Perfil principal levando todos os dados recolhidos e a foto
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -67,7 +75,7 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
           userHeight: widget.userHeight,
           userWeight: widget.userWeight,
           userAge: widget.userAge,
-          userPhoto: _selectedImage, // Passa a foto escolhida (ou null)
+          userPhoto: _selectedImage,
         ),
       ),
     );
@@ -75,7 +83,6 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Ecrã de carregamento exibido enquanto o perfil é configurado
     if (_isLoading) {
       return Scaffold(
         backgroundColor: AppColors.backgroundCream,
@@ -94,12 +101,17 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: AppColors.textDark,
+                  fontFamily: 'Times New Roman',
                 ),
               ),
               SizedBox(height: 8),
               Text(
                 'Estamos a configurar tudo para si.',
-                style: TextStyle(fontSize: 15, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey,
+                  fontFamily: 'Times New Roman',
+                ),
               ),
             ],
           ),
@@ -122,6 +134,7 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
             fontSize: 14,
             fontWeight: FontWeight.bold,
             color: Colors.grey,
+            fontFamily: 'Times New Roman',
           ),
         ),
         centerTitle: true,
@@ -137,18 +150,23 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textDark,
+                fontFamily: 'Times New Roman',
               ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             const Text(
               'Escolha uma imagem ou continue sem foto.',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+                fontFamily: 'Times New Roman',
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 40),
 
-            // Círculo interativo da foto com ícone da câmara
+            // Círculo interativo da foto
             Center(
               child: GestureDetector(
                 onTap: _pickImage,
@@ -228,7 +246,8 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black,
+                    fontFamily: 'Times New Roman',
                   ),
                 ),
               ),

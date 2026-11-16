@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
 
-/// [WorkoutScreen] exibe o ecrã principal de treinos com categorias organizadas
-/// (Aquecimento e Séries recomendadas para o perfil) que abrem listas detalhadas ao tocar.
+// [WorkoutScreen] exibe o ecrã principal de treinos com categorias organizadas
+// (Aquecimento e Séries recomendadas para o perfil) que abrem listas detalhadas ao tocar.
 class WorkoutScreen extends StatelessWidget {
   const WorkoutScreen({super.key});
 
@@ -69,6 +69,7 @@ class WorkoutScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
+
               SizedBox(
                 height: 140,
                 child: ListView(
@@ -89,7 +90,8 @@ class WorkoutScreen extends StatelessWidget {
                         {
                           'title': 'Alongamento de braços',
                           'subtitle': '3 min • Leve • Alongamento',
-                          'description': 'Estique o braço à frente e puxe levemente.',
+                          'description':
+                              'Estique o braço à frente e puxe levemente.',
                           'image': 'assets/images/ex4.png',
                         },
                       ],
@@ -104,13 +106,15 @@ class WorkoutScreen extends StatelessWidget {
                         {
                           'title': 'Extensão de pernas sentado',
                           'subtitle': '4 min • Leve • Pernas',
-                          'description': 'Estique a perna à frente de forma controlada.',
+                          'description':
+                              'Estique a perna à frente de forma controlada.',
                           'image': 'assets/images/ex1.png',
                         },
                         {
                           'title': 'Movimentação dos tornozelos',
                           'subtitle': '3 min • Leve • Mobilidade',
-                          'description': 'Rode os pés lentamente para ambos os lados.',
+                          'description':
+                              'Rode os pés lentamente para ambos os lados.',
                           'image': 'assets/images/ex2.png',
                         },
                       ],
@@ -211,12 +215,12 @@ class WorkoutScreen extends StatelessWidget {
 
   // Cartão horizontal de Aquecimento
   Widget _buildWarmupCard(
-      BuildContext context, {
-        required String title,
-        required String subtitle,
-        required IconData icon,
-        required List<Map<String, String>> exercises,
-      }) {
+    BuildContext context, {
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required List<Map<String, String>> exercises,
+  }) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -275,13 +279,13 @@ class WorkoutScreen extends StatelessWidget {
 
   // Cartão vertical de Categoria Recomendada
   Widget _buildExerciseCategoryCard(
-      BuildContext context, {
-        required String title,
-        required String duration,
-        required String level,
-        required IconData icon,
-        required List<Map<String, String>> exercises,
-      }) {
+    BuildContext context, {
+    required String title,
+    required String duration,
+    required String level,
+    required IconData icon,
+    required List<Map<String, String>> exercises,
+  }) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -351,7 +355,7 @@ class WorkoutScreen extends StatelessWidget {
   }
 }
 
-/// Ecrã de Listagem Detalhada da Categoria
+// Ecrã de Listagem Detalhada da Categoria
 class CategoryWorkoutScreen extends StatefulWidget {
   final String categoryTitle;
   final List<Map<String, String>> exercises;
@@ -372,6 +376,7 @@ class _CategoryWorkoutScreenState extends State<CategoryWorkoutScreen> {
   @override
   void initState() {
     super.initState();
+
     _completedStatus = List.generate(widget.exercises.length, (index) => false);
   }
 
@@ -408,7 +413,9 @@ class _CategoryWorkoutScreenState extends State<CategoryWorkoutScreen> {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12.0),
                     child: InkWell(
-                      onTap: () => _showExerciseDetailDialog(context, exercise),
+                      onTap: () {
+                        _showExerciseDetailDialog(context, exercise);
+                      },
                       borderRadius: BorderRadius.circular(16),
                       child: Container(
                         padding: const EdgeInsets.all(16),
@@ -428,7 +435,8 @@ class _CategoryWorkoutScreenState extends State<CategoryWorkoutScreen> {
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFf6ba02).withOpacity(0.25),
+                                color: const Color(0xFFf6ba02)
+                                    .withOpacity(0.25),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: const Icon(
@@ -463,10 +471,13 @@ class _CategoryWorkoutScreenState extends State<CategoryWorkoutScreen> {
                                 ],
                               ),
                             ),
+
+                            // Botão para marcar exercício como feito
                             InkWell(
                               onTap: () {
                                 setState(() {
-                                  _completedStatus[index] = !_completedStatus[index];
+                                  _completedStatus[index] =
+                                      !_completedStatus[index];
                                 });
                               },
                               child: Container(
@@ -520,11 +531,11 @@ class _CategoryWorkoutScreenState extends State<CategoryWorkoutScreen> {
     );
   }
 
-  // Janela pop-up de detalhes do exercício carregando a imagem respetiva
+  // Janela pop-up de detalhes do exercício
   void _showExerciseDetailDialog(
-      BuildContext context,
-      Map<String, String> exercise,
-      ) {
+    BuildContext context,
+    Map<String, String> exercise,
+  ) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -583,6 +594,8 @@ class _CategoryWorkoutScreenState extends State<CategoryWorkoutScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
+
+                // Imagem do exercício
                 Container(
                   height: 180,
                   width: double.infinity,
@@ -597,7 +610,9 @@ class _CategoryWorkoutScreenState extends State<CategoryWorkoutScreen> {
                     borderRadius: BorderRadius.circular(16),
                     child: Image.asset(
                       exercise['image'] ?? 'assets/images/logo_reage.png',
-                      fit: BoxFit.contain,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
                     ),
                   ),
                 ),

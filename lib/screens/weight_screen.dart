@@ -3,20 +3,28 @@ import 'package:idosos/constants/colors.dart';
 
 import 'profile_photo_screen.dart';
 
-/// [WeightScreen] corresponde à etapa 04 do onboarding (Medidas Corporais).
-/// Permite ao utilizador ajustar de forma interativa a sua idade, altura e peso
-/// utilizando sliders de tamanho ampliado adequados para acessibilidade.
+// WeightScreen corresponde à etapa 04 do onboarding (Medidas Corporais).
+// Permite ajustar idade, altura e peso utilizando sliders.
 class WeightScreen extends StatefulWidget {
-  final String userName; // Recebe o nome vindo das telas anteriores
+  final String userName;
+  final String selectedGoal;
+  final String activityLevel;
+  final List<String> bodyConcerns;
 
-  const WeightScreen({super.key, required this.userName});
+  const WeightScreen({
+    super.key,
+    required this.userName,
+    required this.selectedGoal,
+    required this.activityLevel,
+    required this.bodyConcerns,
+  });
 
   @override
   State<WeightScreen> createState() => _WeightScreenState();
 }
 
 class _WeightScreenState extends State<WeightScreen> {
-  // Valores iniciais padrão configurados para o público idoso
+  // Valores iniciais padrão
   double _selectedWeight = 70.0;
   double _selectedHeight = 1.65;
   int _selectedAge = 65;
@@ -38,6 +46,7 @@ class _WeightScreenState extends State<WeightScreen> {
             fontSize: 14,
             fontWeight: FontWeight.bold,
             color: Colors.grey,
+            fontFamily: 'Times New Roman',
           ),
         ),
         centerTitle: true,
@@ -53,18 +62,26 @@ class _WeightScreenState extends State<WeightScreen> {
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textDark,
+                fontFamily: 'Times New Roman',
               ),
               textAlign: TextAlign.center,
             ),
+
             const SizedBox(height: 8),
+
             const Text(
               'Deslize as barras para ajustar seus dados.',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+                fontFamily: 'Times New Roman',
+              ),
               textAlign: TextAlign.center,
             ),
+
             const SizedBox(height: 24),
 
-            // Cartão de Ajuste: Idade
+            // Cartão de ajuste: Idade
             _buildSliderCard(
               title: 'Idade',
               valueText: '$_selectedAge anos',
@@ -72,11 +89,16 @@ class _WeightScreenState extends State<WeightScreen> {
               min: 50,
               max: 100,
               divisions: 50,
-              onChanged: (val) => setState(() => _selectedAge = val.round()),
+              onChanged: (val) {
+                setState(() {
+                  _selectedAge = val.round();
+                });
+              },
             ),
+
             const SizedBox(height: 16),
 
-            // Cartão de Ajuste: Altura
+            // Cartão de ajuste: Altura
             _buildSliderCard(
               title: 'Altura',
               valueText: '${_selectedHeight.toStringAsFixed(2)} m',
@@ -84,11 +106,16 @@ class _WeightScreenState extends State<WeightScreen> {
               min: 1.30,
               max: 2.10,
               divisions: 80,
-              onChanged: (val) => setState(() => _selectedHeight = val),
+              onChanged: (val) {
+                setState(() {
+                  _selectedHeight = val;
+                });
+              },
             ),
+
             const SizedBox(height: 16),
 
-            // Cartão de Ajuste: Peso
+            // Cartão de ajuste: Peso
             _buildSliderCard(
               title: 'Peso',
               valueText: '${_selectedWeight.toStringAsFixed(1)} kg',
@@ -96,11 +123,16 @@ class _WeightScreenState extends State<WeightScreen> {
               min: 35.0,
               max: 150.0,
               divisions: 230,
-              onChanged: (val) => setState(() => _selectedWeight = val),
+              onChanged: (val) {
+                setState(() {
+                  _selectedWeight = val;
+                });
+              },
             ),
+
             const SizedBox(height: 32),
 
-            // Botão para concluir a avaliação e avançar para a foto de perfil
+            // Botão para avançar para a foto de perfil
             SizedBox(
               height: 55,
               child: ElevatedButton(
@@ -111,12 +143,14 @@ class _WeightScreenState extends State<WeightScreen> {
                   ),
                 ),
                 onPressed: () {
-                  // Empacota todos os dados recolhidos e envia para a tela seguinte
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => ProfilePhotoScreen(
                         userName: widget.userName,
+                        selectedGoal: widget.selectedGoal,
+                        activityLevel: widget.activityLevel,
+                        bodyConcerns: widget.bodyConcerns,
                         userHeight: '${_selectedHeight.toStringAsFixed(2)} m',
                         userWeight: '${_selectedWeight.toStringAsFixed(1)} kg',
                         userAge: '$_selectedAge anos',
@@ -125,11 +159,12 @@ class _WeightScreenState extends State<WeightScreen> {
                   );
                 },
                 child: const Text(
-                  'CONCLUIR AVALIAÇÃO',
+                  'PRÓXIMO',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black,
+                    fontFamily: 'Times New Roman',
                   ),
                 ),
               ),
@@ -140,7 +175,7 @@ class _WeightScreenState extends State<WeightScreen> {
     );
   }
 
-  // Componente reutilizável para construir cartões com sliders personalizados
+  // Componente reutilizável para construir os cartões com sliders
   Widget _buildSliderCard({
     required String title,
     required String valueText,
@@ -174,6 +209,7 @@ class _WeightScreenState extends State<WeightScreen> {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: AppColors.textDark,
+                  fontFamily: 'Times New Roman',
                 ),
               ),
               Text(
@@ -182,10 +218,12 @@ class _WeightScreenState extends State<WeightScreen> {
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryYellow,
+                  fontFamily: 'Times New Roman',
                 ),
               ),
             ],
           ),
+
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
               activeTrackColor: AppColors.primaryYellow,

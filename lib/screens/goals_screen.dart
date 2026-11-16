@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
 import 'package:idosos/screens/activity_level_screen.dart';
 
-/// [GoalsScreen] é a etapa 01 do onboarding.
-/// Permite ao utilizador idoso selecionar o seu principal objetivo de saúde e bem-estar.
+// [GoalsScreen] é a etapa 01 do onboarding.
+// Permite ao utilizador idoso selecionar seu principal objetivo de saúde e bem-estar.
 class GoalsScreen extends StatefulWidget {
   final String userName;
 
@@ -148,8 +148,10 @@ class _GoalsScreenState extends State<GoalsScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                ActivityLevelScreen(userName: widget.userName),
+                            builder: (context) => ActivityLevelScreen(
+                              userName: widget.userName,
+                              selectedGoal: _selectedGoal!,
+                            ),
                           ),
                         );
                       }

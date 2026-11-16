@@ -2,28 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
 import 'package:idosos/screens/body_concern_screen.dart';
 
-/// [ActivityLevelScreen] corresponde à etapa 02 do fluxo de onboarding do ReAge.
-///
-/// Tem como objetivo identificar a frequência e intensidade atual de exercícios
-/// do utilizador idoso, apresentando cartões de seleção ampla com alto contraste
-/// para facilitar a leitura e o toque.
 class ActivityLevelScreen extends StatefulWidget {
-  /// Nome do utilizador transportado desde o ecrã de registo inicial.
   final String userName;
+  final String selectedGoal;
 
-  const ActivityLevelScreen({super.key, required this.userName});
+  const ActivityLevelScreen({
+    super.key,
+    required this.userName,
+    required this.selectedGoal,
+  });
 
   @override
   State<ActivityLevelScreen> createState() => _ActivityLevelScreenState();
 }
 
 class _ActivityLevelScreenState extends State<ActivityLevelScreen> {
-  /// Armazena a opção atualmente selecionada pelo utilizador.
-  /// Inicia com um valor padrão intermédio para evitar seleções vazias.
   String _selectedLevel =
       'Ocasionalmente faço exercícios ou caminho por 30 minutos';
 
-  /// Lista de opções pré-definidas adaptadas à realidade e ritmo do público idoso.
   final List<String> _activityLevels = [
     'Quase nenhum exercício (Sedentário/a)',
     'Ocasionalmente faço exercícios ou caminho por 30 minutos',
@@ -48,6 +44,7 @@ class _ActivityLevelScreenState extends State<ActivityLevelScreen> {
             fontSize: 14,
             fontWeight: FontWeight.bold,
             color: Colors.grey,
+            fontFamily: 'Times New Roman',
           ),
         ),
         centerTitle: true,
@@ -57,18 +54,16 @@ class _ActivityLevelScreenState extends State<ActivityLevelScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Título principal da pergunta com fonte ampliada para legibilidade
             const Text(
               'Qual é o seu nível de atividade física?',
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textDark,
+                fontFamily: 'Times New Roman',
               ),
             ),
             const SizedBox(height: 24),
-
-            // Lista interativa de cartões selecionáveis
             Expanded(
               child: ListView.builder(
                 itemCount: _activityLevels.length,
@@ -90,7 +85,6 @@ class _ActivityLevelScreenState extends State<ActivityLevelScreen> {
                         decoration: BoxDecoration(
                           color: AppColors.white,
                           borderRadius: BorderRadius.circular(16),
-                          // Destaca visualmente o cartão selecionado com borda amarela
                           border: Border.all(
                             color: isSelected
                                 ? AppColors.primaryYellow
@@ -107,7 +101,6 @@ class _ActivityLevelScreenState extends State<ActivityLevelScreen> {
                         ),
                         child: Row(
                           children: [
-                            // Ícone de estado (selecionado vs não selecionado)
                             Icon(
                               isSelected
                                   ? Icons.check_circle
@@ -127,6 +120,7 @@ class _ActivityLevelScreenState extends State<ActivityLevelScreen> {
                                       ? FontWeight.bold
                                       : FontWeight.w500,
                                   color: AppColors.textDark,
+                                  fontFamily: 'Times New Roman',
                                 ),
                               ),
                             ),
@@ -138,8 +132,6 @@ class _ActivityLevelScreenState extends State<ActivityLevelScreen> {
                 },
               ),
             ),
-
-            // Botão de ação principal para avançar no fluxo de cadastro
             SizedBox(
               width: double.infinity,
               height: 55,
@@ -151,12 +143,15 @@ class _ActivityLevelScreenState extends State<ActivityLevelScreen> {
                   ),
                 ),
                 onPressed: () {
-                  // Navega para a próxima etapa (Focos Corporais) mantendo o nome do utilizador
-                  Navigator.pushReplacement(
+                  // Envia o utilizador para a próxima tela.
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          BodyConcernScreen(userName: widget.userName),
+                      builder: (context) => BodyConcernScreen(
+                        userName: widget.userName,
+                        selectedGoal: widget.selectedGoal,
+                        activityLevel: _selectedLevel,
+                      ),
                     ),
                   );
                 },
@@ -165,7 +160,8 @@ class _ActivityLevelScreenState extends State<ActivityLevelScreen> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black,
+                    fontFamily: 'Times New Roman',
                   ),
                 ),
               ),

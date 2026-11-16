@@ -5,15 +5,22 @@ import 'weight_screen.dart';
 
 class BodyConcernScreen extends StatefulWidget {
   final String userName;
+  final String selectedGoal;
+  final String activityLevel;
 
-  const BodyConcernScreen({super.key, required this.userName});
+  const BodyConcernScreen({
+    super.key,
+    required this.userName,
+    required this.selectedGoal,
+    required this.activityLevel,
+  });
 
   @override
   State<BodyConcernScreen> createState() => _BodyConcernScreenState();
 }
 
 class _BodyConcernScreenState extends State<BodyConcernScreen> {
-  // Lista para guardar múltiplos desconfortos selecionados pelo idoso
+  // Lista para guardar múltiplos desconfortos selecionados
   final List<String> _selectedConcerns = [];
 
   // Lista de opções de desconfortos
@@ -62,7 +69,6 @@ class _BodyConcernScreenState extends State<BodyConcernScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
-
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -76,11 +82,11 @@ class _BodyConcernScreenState extends State<BodyConcernScreen> {
             fontSize: 14,
             fontWeight: FontWeight.bold,
             color: Colors.grey,
+            fontFamily: 'Times New Roman',
           ),
         ),
         centerTitle: true,
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -92,16 +98,18 @@ class _BodyConcernScreenState extends State<BodyConcernScreen> {
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textDark,
+                fontFamily: 'Times New Roman',
               ),
             ),
-
             const SizedBox(height: 8),
-
             const Text(
               'Isso nos ajuda a personalizar os treinos com máxima segurança.',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+                fontFamily: 'Times New Roman',
+              ),
             ),
-
             const SizedBox(height: 20),
 
             // Lista de opções de seleção múltipla
@@ -118,21 +126,17 @@ class _BodyConcernScreenState extends State<BodyConcernScreen> {
                     child: InkWell(
                       onTap: () => _toggleSelection(item['title']!),
                       borderRadius: BorderRadius.circular(16),
-
                       child: Container(
                         padding: const EdgeInsets.all(18),
-
                         decoration: BoxDecoration(
                           color: AppColors.white,
                           borderRadius: BorderRadius.circular(16),
-
                           border: Border.all(
                             color: isSelected
                                 ? AppColors.primaryYellow
                                 : Colors.transparent,
                             width: 2,
                           ),
-
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.03),
@@ -141,47 +145,40 @@ class _BodyConcernScreenState extends State<BodyConcernScreen> {
                             ),
                           ],
                         ),
-
                         child: Row(
                           children: [
                             Icon(
                               isSelected
                                   ? Icons.check_box
                                   : Icons.check_box_outline_blank,
-
                               color: isSelected
                                   ? AppColors.primaryYellow
                                   : Colors.grey,
-
                               size: 28,
                             ),
-
                             const SizedBox(width: 14),
-
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     item['title']!,
-
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: isSelected
                                           ? FontWeight.bold
                                           : FontWeight.w500,
                                       color: AppColors.textDark,
+                                      fontFamily: 'Times New Roman',
                                     ),
                                   ),
-
                                   const SizedBox(height: 2),
-
                                   Text(
                                     item['subtitle']!,
-
                                     style: TextStyle(
                                       fontSize: 13,
                                       color: Colors.grey[600],
+                                      fontFamily: 'Times New Roman',
                                     ),
                                   ),
                                 ],
@@ -196,41 +193,42 @@ class _BodyConcernScreenState extends State<BodyConcernScreen> {
               ),
             ),
 
-            // Botão concluir/próximo
+            // Botão próximo
             SizedBox(
               width: double.infinity,
               height: 55,
-
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: _selectedConcerns.isNotEmpty
-                      ? AppColors.primaryYellow
-                      : Colors.grey[400],
-
+                  backgroundColor: AppColors.primaryYellow,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
+                onPressed: () {
+                  // Se nada foi marcado, assume nenhum desconforto
+                  if (_selectedConcerns.isEmpty) {
+                    _selectedConcerns.add('Nenhum desconforto');
+                  }
 
-                onPressed: _selectedConcerns.isNotEmpty
-                    ? () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                WeightScreen(userName: widget.userName),
-                          ),
-                        );
-                      }
-                    : null,
-
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WeightScreen(
+                        userName: widget.userName,
+                        selectedGoal: widget.selectedGoal,
+                        activityLevel: widget.activityLevel,
+                        bodyConcerns: List<String>.from(_selectedConcerns),
+                      ),
+                    ),
+                  );
+                },
                 child: const Text(
-                  'GERAR MEU PLANO DE TREINO',
-
+                  'PRÓXIMO',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black,
+                    fontFamily: 'Times New Roman',
                   ),
                 ),
               ),

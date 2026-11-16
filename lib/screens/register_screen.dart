@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
 import 'package:idosos/widgets/custom_input.dart';
 
-import 'weight_screen.dart'; // Importe a tela de perguntas/medidas para onde o fluxo deve ir
+import 'goals_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -15,7 +15,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
   String _selectedRole = 'O próprio idoso';
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +36,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. Logotipo maior e nome ReAge centralizados no topo
               Center(
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -52,7 +60,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 32),
 
-              // 2. Título principal
               const Text(
                 'Comece a se cuidar',
                 style: TextStyle(
@@ -63,6 +70,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               const SizedBox(height: 8),
+
               const Text(
                 'Crie uma conta para montar seu plano pessoal.',
                 style: TextStyle(
@@ -73,13 +81,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 24),
 
-              // 3. Campos de Entrada com o amarelo vivo
               CustomInput(
                 controller: _nameController,
                 label: 'Como quer ser chamado?',
                 icon: Icons.person_outline,
               ),
               const SizedBox(height: 16),
+
               CustomInput(
                 controller: _emailController,
                 label: 'E-mail',
@@ -87,6 +95,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
+
               CustomInput(
                 controller: _passwordController,
                 label: 'Senha (mínimo de 8 caracteres)',
@@ -95,7 +104,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 16),
 
-              // 4. Seleção de perfil
               const Text(
                 'Quem está cadastrando?',
                 style: TextStyle(
@@ -106,6 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               const SizedBox(height: 8),
+
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
@@ -146,25 +155,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 28),
 
-              // 5. Botão "Criar conta" redirecionando para a parte de perguntas/avaliação
               SizedBox(
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFFB703), // Amarelo vivo
+                    backgroundColor: const Color(0xFFFFB703),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     elevation: 2,
                   ),
                   onPressed: () {
-                    // Vai diretamente para o fluxo de perguntas do idoso (ex: WeightScreen)
+                    if (_nameController.text.trim().isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Informe seu nome para continuar.'),
+                        ),
+                      );
+                      return;
+                    }
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            WeightScreen(userName: _nameController.text),
+                            GoalsScreen(userName: _nameController.text.trim()),
                       ),
                     );
                   },
@@ -172,8 +188,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     'Criar conta',
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold, // Negrito destacado
-                      color: Colors.black, // Texto em preto para contraste
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                       fontFamily: 'Times New Roman',
                     ),
                   ),
@@ -181,7 +197,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 20),
 
-              // 6. Rodapé para voltar ao Login
               Center(
                 child: Row(
                   mainAxisSize: MainAxisSize.min,

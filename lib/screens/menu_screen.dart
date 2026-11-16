@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
 
 import 'login_screen.dart';
+import 'onboarding_screen.dart'; // Importa o ecrã de onboarding/perguntas
 
 /// [MenuScreen] apresenta as opções adicionais, configurações de acessibilidade
 /// e saída da conta no aplicativo ReAge.
@@ -106,13 +107,30 @@ class _MenuScreenState extends State<MenuScreen> {
 
           const SizedBox(height: 28),
           const Text(
-            'Suporte',
+            'Suporte e Avaliação',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: AppColors.textDark,
             ),
           ),
+          const SizedBox(height: 12),
+
+          // NOVO BOTÃO: Chamar o Onboarding / Perguntas a partir do menu
+          _buildActionTile(
+            icon: Icons.assignment_outlined,
+            title: 'Refazer Avaliação Física',
+            subtitle: 'Atualize suas metas, nível e dados corporais',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const OnboardingScreen(),
+                ),
+              );
+            },
+          ),
+
           const SizedBox(height: 12),
 
           // Botão de Ajuda / Contato de Emergência
