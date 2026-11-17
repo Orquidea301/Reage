@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "837033565501",
+    "project_id": "idosos-c887a",
+    "storage_bucket": "idosos-c887a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837033565501:android:c3095ce23c38101784b954",
+        "android_client_info": {
+          "package_name": "com.example.idosos3"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpZ4OBGt0Wkd3PPpxT7psxpoytYIYs7Xk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
