@@ -2,26 +2,26 @@ import 'dart:io'; // Necessário para a classe File
 
 import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
+import 'package:idosos/models/user_model.dart';
 import 'package:idosos/screens/workout_screen.dart';
 
 import 'report_screen.dart';
 
 /// [ProfileScreen] é o ecrã principal de perfil e hub de navegação do ReAge.
 /// Gere a troca de abas (Treino, Relatório e Perfil) e exibe/edita as informações
-/// recolhidas do utilizador (nome, foto, altura, peso e idade).
+/// recolhidas do utilizador através do [UserModel].
 class ProfileScreen extends StatefulWidget {
-  final String userName;
-  final String userHeight;
-  final String userWeight;
-  final String userAge;
+  final UserModel user;
   final File? userPhoto; // Foto de perfil vinda do onboarding
 
   const ProfileScreen({
     super.key,
-    this.userName = 'Visitante',
-    this.userHeight = '1.65 m',
-    this.userWeight = '70.0 kg',
-    this.userAge = '65 anos',
+    this.user = const UserModel(
+      name: 'Visitante',
+      height: '1.65 m',
+      weight: '70.0 kg',
+      age: '65 anos',
+    ),
     this.userPhoto,
   });
 
@@ -43,10 +43,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _currentName = widget.userName;
-    _currentHeight = widget.userHeight;
-    _currentWeight = widget.userWeight;
-    _currentAge = widget.userAge;
+    _currentName = widget.user.name;
+    _currentHeight = widget.user.height;
+    _currentWeight = widget.user.weight;
+    _currentAge = widget.user.age;
   }
 
   // Atualiza o índice da aba ativa na barra de navegação inferior

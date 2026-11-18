@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
+import 'package:idosos/models/user_model.dart';
 
 import 'profile_screen.dart';
 import 'report_screen.dart';
@@ -8,18 +9,12 @@ import 'workout_screen.dart';
 /// [DashboardScreen] é o ecrã principal (Lobby) do ReAge após o onboarding.
 /// Gere a navegação inferior entre as abas de Treino, Relatório e Perfil.
 class DashboardScreen extends StatefulWidget {
-  final String userName;
-  final String userHeight;
-  final String userWeight;
-  final String userAge;
+  final UserModel user;
   final dynamic userPhoto;
 
   const DashboardScreen({
     super.key,
-    required this.userName,
-    required this.userHeight,
-    required this.userWeight,
-    required this.userAge,
+    required this.user,
     this.userPhoto,
   });
 
@@ -40,17 +35,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       // Aba 1: Relatório de Progresso e Métricas
       ReportScreen(
-        userWeight: widget.userWeight,
-        userHeight: widget.userHeight,
-        userAge: widget.userAge,
+        userWeight: widget.user.weight,
+        userHeight: widget.user.height,
+        userAge: widget.user.age,
       ),
 
       // Aba 2: Perfil Completo do Utilizador
       ProfileScreen(
-        userName: widget.userName,
-        userHeight: widget.userHeight,
-        userWeight: widget.userWeight,
-        userAge: widget.userAge,
+        user: widget.user,
         userPhoto: widget.userPhoto,
       ),
     ];

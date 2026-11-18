@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
+import 'package:idosos/models/user_model.dart';
 
 import 'profile_photo_screen.dart';
 
@@ -147,13 +148,15 @@ class _WeightScreenState extends State<WeightScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ProfilePhotoScreen(
-                        userName: widget.userName,
+                        user: UserModel(
+                          name: widget.userName,
+                          height: '${_selectedHeight.toStringAsFixed(2)} m',
+                          weight: '${_selectedWeight.toStringAsFixed(1)} kg',
+                          age: '$_selectedAge anos',
+                        ),
                         selectedGoal: widget.selectedGoal,
                         activityLevel: widget.activityLevel,
                         bodyConcerns: widget.bodyConcerns,
-                        userHeight: '${_selectedHeight.toStringAsFixed(2)} m',
-                        userWeight: '${_selectedWeight.toStringAsFixed(1)} kg',
-                        userAge: '$_selectedAge anos',
                       ),
                     ),
                   );

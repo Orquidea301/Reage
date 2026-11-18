@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
+import 'package:idosos/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'profile_screen.dart';
@@ -9,23 +10,17 @@ import 'profile_screen.dart';
 // Permite carregar uma fotografia de perfil
 // ou prosseguir sem foto.
 class ProfilePhotoScreen extends StatefulWidget {
-  final String userName;
+  final UserModel user;
   final String selectedGoal;
   final String activityLevel;
   final List<String> bodyConcerns;
-  final String userHeight;
-  final String userWeight;
-  final String userAge;
 
   const ProfilePhotoScreen({
     super.key,
-    required this.userName,
+    required this.user,
     required this.selectedGoal,
     required this.activityLevel,
     required this.bodyConcerns,
-    required this.userHeight,
-    required this.userWeight,
-    required this.userAge,
   });
 
   @override
@@ -71,10 +66,7 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => ProfileScreen(
-          userName: widget.userName,
-          userHeight: widget.userHeight,
-          userWeight: widget.userWeight,
-          userAge: widget.userAge,
+          user: widget.user,
           userPhoto: _selectedImage,
         ),
       ),
