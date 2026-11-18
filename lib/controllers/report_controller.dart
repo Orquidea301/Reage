@@ -1,24 +1,22 @@
+import '../models/user_model.dart';
+
 /// [ReportController] é uma classe de pura lógica Dart responsável por processar
-/// os cálculos de IMC e categorização de saúde baseados nas medidas corporais.
+/// os cálculos de IMC e categorização de saúde baseados nas medidas corporais do [UserModel].
 class ReportController {
-  final String userWeight;
-  final String userHeight;
-  final String userAge;
+  final UserModel user;
 
   ReportController({
-    required this.userWeight,
-    required this.userHeight,
-    required this.userAge,
+    required this.user,
   });
 
   /// Calcula o Índice de Massa Corporal (IMC) com base no peso e altura informados.
   double get bmi {
     try {
       final weight = double.parse(
-        userWeight.replaceAll(RegExp(r'[^0-9.]'), ''),
+        user.weight.replaceAll(RegExp(r'[^0-9.]'), ''),
       );
       final height = double.parse(
-        userHeight.replaceAll(RegExp(r'[^0-9.]'), ''),
+        user.height.replaceAll(RegExp(r'[^0-9.]'), ''),
       );
       if (height > 0) {
         return weight / (height * height);

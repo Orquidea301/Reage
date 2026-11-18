@@ -33,11 +33,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       // Aba 0: Ecrã de Treinos e Atividades Diárias
       const WorkoutScreen(),
 
-      // Aba 1: Relatório de Progresso e Métricas
+      // Aba 1: Relatório de Progresso e Métricas baseado no UserModel
       ReportScreen(
-        userWeight: widget.user.weight,
-        userHeight: widget.user.height,
-        userAge: widget.user.age,
+        user: widget.user,
       ),
 
       // Aba 2: Perfil Completo do Utilizador

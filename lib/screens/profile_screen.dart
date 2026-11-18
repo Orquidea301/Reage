@@ -242,11 +242,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (_selectedIndex == 0) {
       return const WorkoutScreen();
     } else if (_selectedIndex == 1) {
-      // Passa os valores atualizados dinamicamente para o Relatório
+      // Passa os valores atualizados dinamicamente via UserModel para o Relatório
       return ReportScreen(
-        userWeight: _currentWeight,
-        userHeight: _currentHeight,
-        userAge: _currentAge,
+        user: UserModel(
+          name: _currentName,
+          height: _currentHeight,
+          weight: _currentWeight,
+          age: _currentAge,
+        ),
       );
     } else {
       // Aba de Perfil dinâmica e interativa com scroll para evitar overflow
