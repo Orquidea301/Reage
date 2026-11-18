@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
-import 'package:idosos/models/exercise.dart';
-import 'package:idosos/services/workout_service.dart';
+import 'package:idosos/src/constants/colors.dart';
+import 'package:idosos/src/models/exercise.dart';
+import 'package:idosos/src/services/workout_service.dart';
 
 // [WorkoutScreen] exibe o ecrã principal de treinos com categorias organizadas
 // (Aquecimento e Séries recomendadas para o perfil) que abrem listas detalhadas ao tocar.

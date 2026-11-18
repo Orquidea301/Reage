@@ -1,6 +1,6 @@
 // Tela 1 (Landing Page / Boas-vindas)
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
+import 'package:idosos/src/constants/colors.dart';
 
 /// [HomeScreen] é o ecrã inicial de boas-vindas diárias do ReAge.
 /// Apresenta uma saudação personalizada, o treino recomendado do dia e atalhos rápidos.

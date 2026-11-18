@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
-import 'package:idosos/controllers/history_controller.dart';
-import 'package:idosos/models/plan_activity.dart';
+import 'package:idosos/src/constants/colors.dart';
+import 'package:idosos/src/controllers/history_controller.dart';
+import 'package:idosos/src/models/plan_activity.dart';
 
 // [HistoryScreen] exibe o plano pessoal de 28 dias onde o idoso pode escolher
 // um dia específico, visualizar as atividades e marcar o que foi concluído.

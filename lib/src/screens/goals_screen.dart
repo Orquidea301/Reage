@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
-import 'package:idosos/screens/activity_level_screen.dart';
+import 'package:idosos/src/constants/colors.dart';
+import 'package:idosos/src/screens/activity_level_screen.dart';
 
 // [GoalsScreen] é a etapa 01 do onboarding.
 // Permite ao utilizador idoso selecionar seu principal objetivo de saúde e bem-estar.

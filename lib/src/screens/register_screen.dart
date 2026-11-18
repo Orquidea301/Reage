@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
-import 'package:idosos/widgets/custom_input.dart';
+import 'package:idosos/src/constants/colors.dart';
+import 'package:idosos/src/widgets/custom_input.dart';
 
 import 'goals_screen.dart';
 

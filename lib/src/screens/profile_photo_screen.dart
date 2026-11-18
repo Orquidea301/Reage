@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
-import 'package:idosos/models/user_model.dart';
+import 'package:idosos/src/constants/colors.dart';
+import 'package:idosos/src/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'profile_screen.dart';

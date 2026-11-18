@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
+import 'package:idosos/src/constants/colors.dart';
 
 import 'weight_screen.dart';
 

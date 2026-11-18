@@ -1,6 +1,5 @@
-// Botão arredondado amarelo padrão
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
+import 'package:idosos/src/constants/colors.dart';
 
 /// [CustomButton] é um botão de ação reutilizável padronizado no ReAge.
 /// Oferece uma altura generosa e texto em destaque para facilitar o toque e a leitura.
@@ -39,10 +38,10 @@ class CustomButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           text,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: textColor,
           ),
         ),
       ),

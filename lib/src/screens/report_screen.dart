@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
-import 'package:idosos/controllers/report_controller.dart';
-import 'package:idosos/models/user_model.dart';
+import 'package:idosos/src/constants/colors.dart';
+import 'package:idosos/src/controllers/report_controller.dart';
+import 'package:idosos/src/models/user_model.dart';
 
 import 'history_screen.dart'; // Importa o ecrã de histórico de 28 dias
 

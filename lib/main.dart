@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import 'constants/colors.dart';
-import 'screens/login_screen.dart'; // Importa a tela de login
-import 'services/notification_service.dart'; // Importa o serviço de notificações
+import 'src/constants/colors.dart';
+import 'src/screens/login_screen.dart'; // Importa a tela de login
+import 'src/services/notification_service.dart'; // Importa o serviço de notificações
 
 /// Ponto de entrada principal da aplicação ReAge.
 void main() async {
