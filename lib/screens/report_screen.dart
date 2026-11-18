@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
+import 'package:idosos/controllers/report_controller.dart';
 
 import 'history_screen.dart'; // Importa o ecrã de histórico de 28 dias
 
 /// [ReportScreen] exibe o relatório detalhado de saúde do utilizador no ReAge.
-/// Inclui o cálculo dinâmico do IMC, resumo de treinos, frequência semanal
-/// interativa e histórico de atividades recentes, totalmente responsivo e sem overflow.
+/// Inclui o resumo de treinos, frequência semanal interativa e histórico de
+/// atividades recentes, utilizando o [ReportController] para a lógica de IMC.
 class ReportScreen extends StatefulWidget {
   final String userWeight;
   final String userHeight;
@@ -23,36 +24,17 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
-  // Cálculo seguro do IMC com base nos dados do usuário fornecidos
-  double _calculateBMI() {
-    try {
-      final weight = double.parse(
-        widget.userWeight.replaceAll(RegExp(r'[^0-9.]'), ''),
-      );
-      final height = double.parse(
-        widget.userHeight.replaceAll(RegExp(r'[^0-9.]'), ''),
-      );
-      if (height > 0) {
-        return weight / (height * height);
-      }
-    } catch (_) {}
-    return 0.0;
-  }
-
-  // Retorna a categoria textual do IMC adaptada
-  String _getBMICategory(double bmi) {
-    if (bmi == 0) return 'Não calculado';
-    if (bmi < 18.5) return 'Abaixo do peso';
-    if (bmi < 25.0) return 'Peso Saudável (Ideal)';
-    if (bmi < 30.0) return 'Sobrepeso leve';
-    return 'Requer atenção médica';
-  }
+  // Instancia o controller puro de Dart para gerir os cálculos de IMC
+  late final ReportController _controller = ReportController(
+    userWeight: widget.userWeight,
+    userHeight: widget.userHeight,
+    userAge: widget.userAge,
+  );
 
   @override
   Widget build(BuildContext context) {
-    final bmi = _calculateBMI();
-    final bmiString = bmi > 0 ? bmi.toStringAsFixed(1) : '--';
-    final bmiStatus = _getBMICategory(bmi);
+    final bmiString = _controller.formattedBmi;
+    final bmiStatus = _controller.category;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
