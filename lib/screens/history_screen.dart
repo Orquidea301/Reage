@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
+import 'package:idosos/controllers/history_controller.dart';
 import 'package:idosos/models/plan_activity.dart';
-import 'package:idosos/services/plan_service.dart';
 
 // [HistoryScreen] exibe o plano pessoal de 28 dias onde o idoso pode escolher
 // um dia específico, visualizar as atividades e marcar o que foi concluído.
@@ -13,16 +13,13 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  int _selectedDay = 1;
-
-  // Lista de atividades simuladas para cada dia selecionado usando o PlanService
-  final Map<int, List<PlanActivity>> _planActivities =
-      PlanService.buildInitialPlan();
+  // Instancia o controller responsável por gerir o estado dos dias e atividades do plano
+  final HistoryController _controller = HistoryController();
 
   @override
   Widget build(BuildContext context) {
     final List<PlanActivity> currentActivities =
-        _planActivities[_selectedDay] ?? PlanService.buildDefaultActivities();
+        _controller.activitiesForSelectedDay;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
@@ -74,12 +71,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   itemCount: 28,
                   itemBuilder: (context, index) {
                     final day = index + 1;
-                    final isSelected = day == _selectedDay;
+                    final isSelected = day == _controller.selectedDay;
 
                     return GestureDetector(
                       onTap: () {
                         setState(() {
-                          _selectedDay = day;
+                          _controller.selectDay(day);
                         });
                       },
                       child: Container(
@@ -141,7 +138,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Dia $_selectedDay',
+                      'Dia ${_controller.selectedDay}',
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -227,7 +224,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 value: activity.done,
                                 onChanged: (bool? value) {
                                   setState(() {
-                                    activity.done = value ?? false;
+                                    _controller.setDone(activity, value);
                                   });
                                 },
                               ),
