@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:idosos/constants/colors.dart';
+import 'package:idosos/models/plan_activity.dart';
+import 'package:idosos/services/plan_service.dart';
 
 // [HistoryScreen] exibe o plano pessoal de 28 dias onde o idoso pode escolher
 // um dia específico, visualizar as atividades e marcar o que foi concluído.
@@ -13,62 +15,14 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   int _selectedDay = 1;
 
-  // Lista de atividades simuladas para cada dia selecionado
-  final Map<int, List<Map<String, dynamic>>> _planActivities = {
-    1: [
-      {
-        'title': 'Respiração e relaxamento sentado',
-        'subtitle': '2 min • Leve • Relaxamento',
-        'done': true,
-      },
-      {
-        'title': 'Mobilidade suave dos ombros',
-        'subtitle': '2 min • Leve • Mobilidade',
-        'done': true,
-      },
-      {
-        'title': 'Movimentação dos tornozelos',
-        'subtitle': '2 min • Leve • Mobilidade',
-        'done': false,
-      },
-    ],
-    2: [
-      {
-        'title': 'Alongamento suave dos braços',
-        'subtitle': '2 min • Leve • Alongamento',
-        'done': false,
-      },
-      {
-        'title': 'Movimentação das mãos e dedos',
-        'subtitle': '2 min • Leve • Coordenação',
-        'done': false,
-      },
-    ],
-    3: [
-      {
-        'title': 'Fortalecimento leve de pernas',
-        'subtitle': '3 min • Iniciante • Força',
-        'done': false,
-      },
-      {
-        'title': 'Equilíbrio com apoio',
-        'subtitle': '3 min • Essencial • Postura',
-        'done': false,
-      },
-    ],
-  };
+  // Lista de atividades simuladas para cada dia selecionado usando o PlanService
+  final Map<int, List<PlanActivity>> _planActivities =
+      PlanService.buildInitialPlan();
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> currentActivities =
-        _planActivities[_selectedDay] ??
-        [
-          {
-            'title': 'Atividades de mobilidade geral',
-            'subtitle': '5 min • Suave',
-            'done': false,
-          },
-        ];
+    final List<PlanActivity> currentActivities =
+        _planActivities[_selectedDay] ?? PlanService.buildDefaultActivities();
 
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
@@ -245,7 +199,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      activity['title'] as String,
+                                      activity.title,
                                       style: const TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -255,7 +209,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
-                                      activity['subtitle'] as String,
+                                      activity.subtitle,
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.grey[600],
@@ -270,10 +224,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               Checkbox(
                                 activeColor: AppColors.primaryYellow,
                                 checkColor: Colors.black,
-                                value: activity['done'] as bool,
+                                value: activity.done,
                                 onChanged: (bool? value) {
                                   setState(() {
-                                    activity['done'] = value ?? false;
+                                    activity.done = value ?? false;
                                   });
                                 },
                               ),
