@@ -1,6 +1,6 @@
 // Tela 4 (Menu superior e navegação)
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
+import 'package:idosos/src/constants/colors.dart';
 
 import 'login_screen.dart';
 import 'onboarding_screen.dart'; // Importa o ecrã de onboarding/perguntas

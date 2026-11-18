@@ -1,27 +1,28 @@
 import 'dart:io'; // Necessário para a classe File
 
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
-import 'package:idosos/screens/workout_screen.dart';
+import 'package:idosos/src/constants/colors.dart';
+import 'package:idosos/src/controllers/profile_controller.dart';
+import 'package:idosos/src/models/user_model.dart';
+import 'package:idosos/src/screens/workout_screen.dart';
 
 import 'report_screen.dart';
 
 /// [ProfileScreen] é o ecrã principal de perfil e hub de navegação do ReAge.
 /// Gere a troca de abas (Treino, Relatório e Perfil) e exibe/edita as informações
-/// recolhidas do utilizador (nome, foto, altura, peso e idade).
+/// recolhidas do utilizador através do [ProfileController] e [UserModel].
 class ProfileScreen extends StatefulWidget {
-  final String userName;
-  final String userHeight;
-  final String userWeight;
-  final String userAge;
+  final UserModel user;
   final File? userPhoto; // Foto de perfil vinda do onboarding
 
   const ProfileScreen({
     super.key,
-    this.userName = 'Visitante',
-    this.userHeight = '1.65 m',
-    this.userWeight = '70.0 kg',
-    this.userAge = '65 anos',
+    this.user = const UserModel(
+      name: 'Visitante',
+      height: '1.65 m',
+      weight: '70.0 kg',
+      age: '65 anos',
+    ),
     this.userPhoto,
   });
 
@@ -32,21 +33,19 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   int _selectedIndex = 2; // Começa na aba Perfil por predefinição
 
-  // Variáveis de estado para permitir edição interativa em tempo real
-  late String _currentName;
-  late String _currentHeight;
-  late String _currentWeight;
-  late String _currentAge;
-  String _healthCondition = 'Mobilidade leve • Sem dores agudas';
-  String _reminderTime = 'Todos os dias às 09:00';
+  // Controller reativo para gerir o estado editável do perfil
+  late final ProfileController _controller;
 
   @override
   void initState() {
     super.initState();
-    _currentName = widget.userName;
-    _currentHeight = widget.userHeight;
-    _currentWeight = widget.userWeight;
-    _currentAge = widget.userAge;
+    _controller = ProfileController(user: widget.user);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   // Atualiza o índice da aba ativa na barra de navegação inferior
@@ -58,9 +57,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // Diálogo interativo para editar Altura, Peso e Idade
   void _showEditMetricsDialog() {
-    final heightController = TextEditingController(text: _currentHeight);
-    final weightController = TextEditingController(text: _currentWeight);
-    final ageController = TextEditingController(text: _currentAge);
+    final heightController = TextEditingController(text: _controller.user.height);
+    final weightController = TextEditingController(text: _controller.user.weight);
+    final ageController = TextEditingController(text: _controller.user.age);
 
     showDialog(
       context: context,
@@ -104,11 +103,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             onPressed: () {
-              setState(() {
-                _currentHeight = heightController.text;
-                _currentWeight = weightController.text;
-                _currentAge = ageController.text;
-              });
+              _controller.updateMetrics(
+                height: heightController.text,
+                weight: weightController.text,
+                age: ageController.text,
+              );
               Navigator.pop(context);
             },
             child: const Text(
@@ -147,7 +146,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // Diálogo interativo para atualizar condições de saúde/restrições
   void _showEditHealthDialog() {
-    final healthController = TextEditingController(text: _healthCondition);
+    final healthController = TextEditingController(text: _controller.healthCondition);
 
     showDialog(
       context: context,
@@ -185,9 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             onPressed: () {
-              setState(() {
-                _healthCondition = healthController.text;
-              });
+              _controller.updateHealthCondition(healthController.text);
               Navigator.pop(context);
             },
             child: const Text(
@@ -208,7 +205,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
-      body: _buildBodyContent(),
+      body: ListenableBuilder(
+        listenable: _controller,
+        builder: (context, child) {
+          return _buildBodyContent();
+        },
+      ),
 
       // Barra de navegação inferior acessível com itens grandes e claros
       bottomNavigationBar: BottomNavigationBar(
@@ -242,11 +244,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (_selectedIndex == 0) {
       return const WorkoutScreen();
     } else if (_selectedIndex == 1) {
-      // Passa os valores atualizados dinamicamente para o Relatório
+      // Passa o UserModel atualizado dinamicamente via controller para o Relatório
       return ReportScreen(
-        userWeight: _currentWeight,
-        userHeight: _currentHeight,
-        userAge: _currentAge,
+        user: _controller.user,
       );
     } else {
       // Aba de Perfil dinâmica e interativa com scroll para evitar overflow
@@ -299,7 +299,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     // Nome dinâmico do utilizador em destaque (preto para alto contraste)
                     Text(
-                      _currentName,
+                      _controller.user.name,
                       style: const TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
@@ -349,19 +349,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          _buildMetricItem(_currentHeight, 'Altura'),
+                          _buildMetricItem(_controller.user.height, 'Altura'),
                           Container(
                             height: 40,
                             width: 1,
                             color: Colors.grey.withOpacity(0.3),
                           ),
-                          _buildMetricItem(_currentWeight, 'Peso'),
+                          _buildMetricItem(_controller.user.weight, 'Peso'),
                           Container(
                             height: 40,
                             width: 1,
                             color: Colors.grey.withOpacity(0.3),
                           ),
-                          _buildMetricItem(_currentAge, 'Idade'),
+                          _buildMetricItem(_controller.user.age, 'Idade'),
                         ],
                       ),
                       const SizedBox(height: 12),
@@ -409,7 +409,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _buildDetailCard(
                     icon: Icons.health_and_safety_outlined,
                     title: 'Condição Física e Restrições',
-                    subtitle: _healthCondition,
+                    subtitle: _controller.healthCondition,
                     onTap: _showEditHealthDialog,
                   ),
                   const SizedBox(height: 12),
@@ -418,17 +418,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _buildDetailCard(
                     icon: Icons.notifications_active_outlined,
                     title: 'Lembrete Diário de Exercícios',
-                    subtitle: _reminderTime,
+                    subtitle: _controller.reminderTime,
                     onTap: () async {
                       final TimeOfDay? picked = await showTimePicker(
                         context: context,
                         initialTime: const TimeOfDay(hour: 9, minute: 0),
                       );
                       if (picked != null) {
-                        setState(() {
-                          _reminderTime =
-                              'Todos os dias às ${picked.format(context)}';
-                        });
+                        _controller.updateReminderTime(
+                          'Todos os dias às ${picked.format(context)}',
+                        );
                       }
                     },
                   ),

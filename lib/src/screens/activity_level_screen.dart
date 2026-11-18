@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
-import 'package:idosos/screens/body_concern_screen.dart';
+import 'package:idosos/src/constants/colors.dart';
+import 'package:idosos/src/screens/body_concern_screen.dart';
 
 class ActivityLevelScreen extends StatefulWidget {
   final String userName;

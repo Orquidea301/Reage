@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
+import 'package:idosos/src/constants/colors.dart';
 
 /// [CustomInput] é um campo de texto reutilizável padronizado no ReAge.
 /// Oferece suporte a ícones, formatação de palavra-passe e alto contraste.

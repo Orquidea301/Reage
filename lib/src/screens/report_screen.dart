@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
+import 'package:idosos/src/constants/colors.dart';
+import 'package:idosos/src/controllers/report_controller.dart';
+import 'package:idosos/src/models/user_model.dart';
 
 import 'history_screen.dart'; // Importa o ecrã de histórico de 28 dias
 
 /// [ReportScreen] exibe o relatório detalhado de saúde do utilizador no ReAge.
-/// Inclui o cálculo dinâmico do IMC, resumo de treinos, frequência semanal
-/// interativa e histórico de atividades recentes, totalmente responsivo e sem overflow.
+/// Inclui o resumo de treinos, frequência semanal interativa e histórico de
+/// atividades recentes, utilizando o [ReportController] para a lógica de IMC via [UserModel].
 class ReportScreen extends StatefulWidget {
-  final String userWeight;
-  final String userHeight;
-  final String userAge;
+  final UserModel user;
 
   const ReportScreen({
     super.key,
-    required this.userWeight,
-    required this.userHeight,
-    required this.userAge,
+    required this.user,
   });
 
   @override
@@ -23,36 +21,15 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
-  // Cálculo seguro do IMC com base nos dados do usuário fornecidos
-  double _calculateBMI() {
-    try {
-      final weight = double.parse(
-        widget.userWeight.replaceAll(RegExp(r'[^0-9.]'), ''),
-      );
-      final height = double.parse(
-        widget.userHeight.replaceAll(RegExp(r'[^0-9.]'), ''),
-      );
-      if (height > 0) {
-        return weight / (height * height);
-      }
-    } catch (_) {}
-    return 0.0;
-  }
-
-  // Retorna a categoria textual do IMC adaptada
-  String _getBMICategory(double bmi) {
-    if (bmi == 0) return 'Não calculado';
-    if (bmi < 18.5) return 'Abaixo do peso';
-    if (bmi < 25.0) return 'Peso Saudável (Ideal)';
-    if (bmi < 30.0) return 'Sobrepeso leve';
-    return 'Requer atenção médica';
-  }
+  // Instancia o controller puro de Dart para gerir os cálculos de IMC com base no UserModel
+  late final ReportController _controller = ReportController(
+    user: widget.user,
+  );
 
   @override
   Widget build(BuildContext context) {
-    final bmi = _calculateBMI();
-    final bmiString = bmi > 0 ? bmi.toStringAsFixed(1) : '--';
-    final bmiStatus = _getBMICategory(bmi);
+    final bmiString = _controller.formattedBmi;
+    final bmiStatus = _controller.category;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
@@ -231,7 +208,7 @@ class _ReportScreenState extends State<ReportScreen> {
               ),
               const SizedBox(height: 24),
 
-              // 3. Bloco de Medidas Corporais e IMC (Com dados recolhidos no onboarding)
+              // 3. Bloco de Medidas Corporais e IMC (Com dados recolhidos no onboarding via UserModel)
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -261,11 +238,11 @@ class _ReportScreenState extends State<ReportScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildMetricColumn('Altura', widget.userHeight),
+                        _buildMetricColumn('Altura', widget.user.height),
                         _buildDivider(),
-                        _buildMetricColumn('Peso', widget.userWeight),
+                        _buildMetricColumn('Peso', widget.user.weight),
                         _buildDivider(),
-                        _buildMetricColumn('Idade', widget.userAge),
+                        _buildMetricColumn('Idade', widget.user.age),
                       ],
                     ),
                     const Divider(height: 32),

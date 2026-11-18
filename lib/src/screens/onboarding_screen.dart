@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
-import 'package:idosos/screens/menu_screen.dart'; // Ou a sua rota principal do menu
+import 'package:idosos/src/constants/colors.dart';
+import 'package:idosos/src/screens/menu_screen.dart'; // Ou a sua rota principal do menu
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
+import 'package:idosos/src/constants/colors.dart';
+import 'package:idosos/src/models/exercise.dart';
+import 'package:idosos/src/services/workout_service.dart';
 
 // [WorkoutScreen] exibe o ecrã principal de treinos com categorias organizadas
 // (Aquecimento e Séries recomendadas para o perfil) que abrem listas detalhadas ao tocar.
@@ -75,50 +77,16 @@ class WorkoutScreen extends StatelessWidget {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-                    _buildWarmupCard(
-                      context,
-                      title: 'Mobilidade de Ombros',
-                      subtitle: '5 min • Suave',
-                      icon: Icons.accessibility_new,
-                      exercises: [
-                        {
-                          'title': 'Mobilidade suave dos ombros',
-                          'subtitle': '2 min • Leve • Mobilidade',
-                          'description': 'Sentado, realize movimentos circulares lentos com os ombros para trás.',
-                          'image': 'assets/images/ex3.png',
-                        },
-                        {
-                          'title': 'Alongamento de braços',
-                          'subtitle': '3 min • Leve • Alongamento',
-                          'description':
-                              'Estique o braço à frente e puxe levemente.',
-                          'image': 'assets/images/ex4.png',
-                        },
-                      ],
-                    ),
-                    const SizedBox(width: 12),
-                    _buildWarmupCard(
-                      context,
-                      title: 'Alongamento de Pernas',
-                      subtitle: '7 min • Sentado',
-                      icon: Icons.self_improvement,
-                      exercises: [
-                        {
-                          'title': 'Extensão de pernas sentado',
-                          'subtitle': '4 min • Leve • Pernas',
-                          'description':
-                              'Estique a perna à frente de forma controlada.',
-                          'image': 'assets/images/ex1.png',
-                        },
-                        {
-                          'title': 'Movimentação dos tornozelos',
-                          'subtitle': '3 min • Leve • Mobilidade',
-                          'description':
-                              'Rode os pés lentamente para ambos os lados.',
-                          'image': 'assets/images/ex2.png',
-                        },
-                      ],
-                    ),
+                    for (int i = 0; i < WorkoutService.warmupCategories.length; i++) ...[
+                      if (i > 0) const SizedBox(width: 12),
+                      _buildWarmupCard(
+                        context,
+                        title: WorkoutService.warmupCategories[i].title,
+                        subtitle: WorkoutService.warmupCategories[i].subtitle,
+                        icon: WorkoutService.warmupCategories[i].icon,
+                        exercises: WorkoutService.warmupCategories[i].exercises,
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -136,76 +104,18 @@ class WorkoutScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              // Cartão 1: Fortalecimento de Quadríceps
-              _buildExerciseCategoryCard(
-                context,
-                title: 'Fortalecimento de Quadríceps',
-                duration: '12 min • Baixo Impacto',
-                level: 'Iniciante',
-                icon: Icons.fitness_center,
-                exercises: [
-                  {
-                    'title': 'Elevação de perna sentada',
-                    'subtitle': '6 min • Iniciante • Força',
-                    'description': 'Sentado na cadeira, levante a perna mantendo-a reta por 5 segundos.',
-                    'image': 'assets/images/ex1.png',
-                  },
-                  {
-                    'title': 'Flexão leve de joelhos',
-                    'subtitle': '6 min • Iniciante • Estabilidade',
-                    'description': 'Com apoio na parede, flexione levemente os joelhos sem forçar.',
-                    'image': 'assets/images/ex4.png',
-                  },
-                ],
-              ),
-              const SizedBox(height: 12),
-
-              // Cartão 2: Equilíbrio e Estabilidade
-              _buildExerciseCategoryCard(
-                context,
-                title: 'Equilíbrio e Estabilidade',
-                duration: '10 min • Com Apoio',
-                level: 'Essencial',
-                icon: Icons.balance,
-                exercises: [
-                  {
-                    'title': 'Apoio unipodal com suporte',
-                    'subtitle': '5 min • Com Apoio • Equilíbrio',
-                    'description': 'Segurando firme na cadeira, levante um pé do chão por 5 segundos.',
-                    'image': 'assets/images/ex2.png',
-                  },
-                  {
-                    'title': 'Caminhada calcanhar-ponta',
-                    'subtitle': '5 min • Essencial • Postura',
-                    'description': 'Dê passos curtos alinhando o calcanhar com a ponta do pé.',
-                    'image': 'assets/images/ex3.png',
-                  },
-                ],
-              ),
-              const SizedBox(height: 12),
-
-              // Cartão 3: Respiração e Postura
-              _buildExerciseCategoryCard(
-                context,
-                title: 'Respiração e Postura',
-                duration: '8 min • Relaxamento',
-                level: 'Suave',
-                icon: Icons.spa,
-                exercises: [
-                  {
-                    'title': 'Respiração e relaxamento sentado',
-                    'subtitle': '4 min • Leve • Relaxamento',
-                    'description': 'Inspire profundamente pelo nariz e expire devagar pela boca.',
-                    'image': 'assets/images/ex5.png',
-                  },
-                  {
-                    'title': 'Alinhamento postural',
-                    'subtitle': '4 min • Suave • Postura',
-                    'description': 'Endireite a coluna e alinhe os ombros respirando calmamente.',
-                    'image': 'assets/images/ex5.png',
-                  },
-                ],
-              ),
+              // Cartões de Categoria Recomendada vindos do WorkoutService
+              ...WorkoutService.recommendedCategories.expand((category) => [
+                    _buildExerciseCategoryCard(
+                      context,
+                      title: category.title,
+                      duration: category.subtitle,
+                      level: category.level ?? '',
+                      icon: category.icon,
+                      exercises: category.exercises,
+                    ),
+                    const SizedBox(height: 12),
+                  ]),
             ],
           ),
         ),
@@ -219,7 +129,7 @@ class WorkoutScreen extends StatelessWidget {
     required String title,
     required String subtitle,
     required IconData icon,
-    required List<Map<String, String>> exercises,
+    required List<Exercise> exercises,
   }) {
     return GestureDetector(
       onTap: () {
@@ -284,7 +194,7 @@ class WorkoutScreen extends StatelessWidget {
     required String duration,
     required String level,
     required IconData icon,
-    required List<Map<String, String>> exercises,
+    required List<Exercise> exercises,
   }) {
     return GestureDetector(
       onTap: () {
@@ -358,7 +268,7 @@ class WorkoutScreen extends StatelessWidget {
 // Ecrã de Listagem Detalhada da Categoria
 class CategoryWorkoutScreen extends StatefulWidget {
   final String categoryTitle;
-  final List<Map<String, String>> exercises;
+  final List<Exercise> exercises;
 
   const CategoryWorkoutScreen({
     super.key,
@@ -451,7 +361,7 @@ class _CategoryWorkoutScreenState extends State<CategoryWorkoutScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    exercise['title']!,
+                                    exercise.title,
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -461,7 +371,7 @@ class _CategoryWorkoutScreenState extends State<CategoryWorkoutScreen> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    exercise['subtitle']!,
+                                    exercise.subtitle,
                                     style: TextStyle(
                                       fontSize: 13,
                                       color: Colors.grey[600],
@@ -534,7 +444,7 @@ class _CategoryWorkoutScreenState extends State<CategoryWorkoutScreen> {
   // Janela pop-up de detalhes do exercício
   void _showExerciseDetailDialog(
     BuildContext context,
-    Map<String, String> exercise,
+    Exercise exercise,
   ) {
     showDialog(
       context: context,
@@ -576,7 +486,7 @@ class _CategoryWorkoutScreenState extends State<CategoryWorkoutScreen> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  exercise['title']!,
+                  exercise.title,
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -586,7 +496,7 @@ class _CategoryWorkoutScreenState extends State<CategoryWorkoutScreen> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  exercise['description']!,
+                  exercise.description,
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.grey[700],
@@ -609,7 +519,7 @@ class _CategoryWorkoutScreenState extends State<CategoryWorkoutScreen> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
                     child: Image.asset(
-                      exercise['image'] ?? 'assets/images/logo_reage.png',
+                      exercise.image ?? 'assets/images/logo_reage.png',
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: double.infinity,

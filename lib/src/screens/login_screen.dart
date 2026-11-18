@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:idosos/constants/colors.dart';
-import 'package:idosos/screens/profile_screen.dart';
+import 'package:idosos/src/constants/colors.dart';
+import 'package:idosos/src/screens/profile_screen.dart';
 
 import 'register_screen.dart';
 
